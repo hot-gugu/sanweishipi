@@ -3,7 +3,7 @@
 
   const menuGroups = [
     { title: '首页', icon: 'fa-home', href: '首页.html' },
-    { title: '监测一张图', icon: 'fa-map', href: '监测一张图.html' },
+    { title: '监测一张图', icon: 'fa-picture-o', href: '方案图册.html' },
     { title: '作业计划管理', icon: 'fa-list-alt', href: '作业计划管理.html' },
     { title: '实时在线巡检', icon: 'fa-video-camera', href: '实时监控.html' },
     { title: '事后视频倒查', icon: 'fa-history', href: '视频倒查列表页面.html' },
