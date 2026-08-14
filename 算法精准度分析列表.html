@@ -125,107 +125,28 @@
           <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-textLight text-xs pointer-events-none"></i>
           <input class="w-full border border-borderLine rounded-md pl-8 pr-3 py-1.5 text-xs focus:outline-none focus:border-primary" placeholder="请输入算法名称"/>
         </div>
-        <div class="ml-auto flex items-center gap-2">
-          <button class="px-3 py-1.5 text-xs rounded-md border border-borderLine text-textSub hover:border-primary hover:text-primary">重置</button>
-          <button class="px-4 py-1.5 text-xs rounded-md bg-primary text-white font-medium hover:bg-primary/90 transition-colors">
-            <i class="fa fa-download mr-1"></i>导出报表
-          </button>
-        </div>
       </div>
 
       <div class="flex gap-4">
-        <!-- 左侧组织架构树 -->
-        <div class="w-56 bg-white rounded-lg border border-borderLine flex flex-col shrink-0">
-          <div class="p-3 border-b border-borderLine">
-            <div class="font-medium text-sm mb-3">组织架构</div>
-            <div class="relative">
-              <i class="fa fa-search absolute left-2.5 top-1/2 -translate-y-1/2 text-textLight text-[10px]"></i>
-              <input class="w-full border border-borderLine rounded-md pl-7 pr-3 py-1.5 text-xs focus:outline-none focus:border-primary" placeholder="搜索单位名称"/>
+        <!-- 左侧组织架构：与作业计划管理页面保持一致 -->
+        <div class="w-[260px] bg-white border-r border-borderLine overflow-y-auto p-6 shrink-0">
+          <h3 class="font-semibold text-slate-800 mb-5 text-base">组织架构</h3>
+          <div class="pl-1">
+            <div class="font-medium text-primary mb-4 flex items-center gap-2">
+              <i class="fa fa-building"></i>鞍钢矿业公司
             </div>
-          </div>
-          <div class="flex-1 overflow-y-auto scrollbar-thin p-2 text-xs">
-            <div class="mb-0.5">
-              <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer hover:bg-slate-50">
-                <i class="fa fa-chevron-down text-[10px] text-textLight w-3"></i>
-                <i class="fa fa-folder-open text-amber-500 w-4"></i>
-                <span>鞍钢矿业集团</span>
+            <div class="pl-6 flex flex-col gap-4">
+              <div class="text-slate-600 cursor-pointer hover:text-primary flex items-center gap-2 text-sm">
+                <i class="fa fa-mine text-xs"></i>齐大山铁矿
               </div>
-              <div class="pl-4">
-                <div class="mb-0.5">
-                  <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item active">
-                    <i class="fa fa-chevron-down text-[10px] text-primary w-3"></i>
-                    <i class="fa fa-folder text-primary w-4"></i>
-                    <span class="font-medium">齐大山铁矿</span>
-                  </div>
-                  <div class="pl-4">
-                    <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                      <i class="fa fa-file-o text-[10px] text-textLight w-3"></i>
-                      <span class="text-textSub">安全生产部</span>
-                    </div>
-                    <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                      <i class="fa fa-file-o text-[10px] text-textLight w-3"></i>
-                      <span class="text-textSub">采矿作业区</span>
-                    </div>
-                    <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                      <i class="fa fa-file-o text-[10px] text-textLight w-3"></i>
-                      <span class="text-textSub">选矿作业区</span>
-                    </div>
-                    <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                      <i class="fa fa-file-o text-[10px] text-textLight w-3"></i>
-                      <span class="text-textSub">运输作业区</span>
-                    </div>
-                    <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                      <i class="fa fa-file-o text-[10px] text-textLight w-3"></i>
-                      <span class="text-textSub">设备动力部</span>
-                    </div>
-                    <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                      <i class="fa fa-file-o text-[10px] text-textLight w-3"></i>
-                      <span class="text-textSub">机电管理部</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-0.5">
-                  <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                    <i class="fa fa-chevron-right text-[10px] text-textLight w-3"></i>
-                    <i class="fa fa-folder text-textLight w-4"></i>
-                    <span class="text-textSub">大孤山铁矿</span>
-                  </div>
-                </div>
-                <div class="mb-0.5">
-                  <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                    <i class="fa fa-chevron-right text-[10px] text-textLight w-3"></i>
-                    <i class="fa fa-folder text-textLight w-4"></i>
-                    <span class="text-textSub">弓长岭露天矿</span>
-                  </div>
-                </div>
-                <div class="mb-0.5">
-                  <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                    <i class="fa fa-chevron-right text-[10px] text-textLight w-3"></i>
-                    <i class="fa fa-folder text-textLight w-4"></i>
-                    <span class="text-textSub">眼前山铁矿</span>
-                  </div>
-                </div>
-                <div class="mb-0.5">
-                  <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                    <i class="fa fa-chevron-right text-[10px] text-textLight w-3"></i>
-                    <i class="fa fa-folder text-textLight w-4"></i>
-                    <span class="text-textSub">鲅鱼圈矿业公司</span>
-                  </div>
-                </div>
-                <div class="mb-0.5">
-                  <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                    <i class="fa fa-chevron-right text-[10px] text-textLight w-3"></i>
-                    <i class="fa fa-folder text-textLight w-4"></i>
-                    <span class="text-textSub">焦化厂</span>
-                  </div>
-                </div>
-                <div class="mb-0.5">
-                  <div class="flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer tree-item">
-                    <i class="fa fa-chevron-right text-[10px] text-textLight w-3"></i>
-                    <i class="fa fa-folder text-textLight w-4"></i>
-                    <span class="text-textSub">设备管理中心</span>
-                  </div>
-                </div>
+              <div class="text-slate-600 cursor-pointer hover:text-primary flex items-center gap-2 text-sm">
+                <i class="fa fa-mine text-xs"></i>弓长岭铁矿
+              </div>
+              <div class="text-slate-600 cursor-pointer hover:text-primary flex items-center gap-2 text-sm">
+                <i class="fa fa-mine text-xs"></i>眼前山铁矿
+              </div>
+              <div class="text-slate-600 cursor-pointer hover:text-primary flex items-center gap-2 text-sm">
+                <i class="fa fa-mine text-xs"></i>东鞍山分公司
               </div>
             </div>
           </div>
