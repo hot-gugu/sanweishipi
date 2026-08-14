@@ -43,6 +43,8 @@
         { title: '违章规则管理', href: '违章规则管理.html' },
         { title: '违章类型管理', href: '违章类型管理.html' },
         { title: '违章等级管理', href: '违章等级管理.html' },
+        { title: '隐患分类管理', href: '隐患分类管理.html' },
+        { title: '隐患等级管理', href: '隐患等级管理.html' },
         { title: '作业区域管理', href: '作业区域管理.html' },
         { title: '作业类型管理', href: '作业类型管理.html' },
         { title: '人脸采集库', href: '人脸采集库.html' },
@@ -198,7 +200,7 @@
     logo.innerHTML = `
       <div class="unified-logo-mark"><i class="fa fa-cube"></i></div>
       <div>
-        <div style="font-size:15px;font-weight:700;color:#fff;line-height:1.25;">三违无视频不作业</div>
+        <div style="font-size:13px;font-weight:700;color:#fff;line-height:1.35;">视频AI识别自进化能力平台</div>
         <div style="font-size:12px;color:#8fa4cf;margin-top:3px;">智慧管控系统</div>
       </div>
     `;

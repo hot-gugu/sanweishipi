@@ -119,6 +119,10 @@
               <h1 class="text-xl font-semibold text-textPrimary">人脸采集库管理</h1>
               <!-- <p class="text-xs text-textSecondary mt-1">对平台采集的人脸数据进行统一管理，支持人员信息维护、照片查看、批量导出及状态管理。</p> -->
             </div>
+            <button id="openMobileCollect" class="bg-primary text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 shadow-figma hover:bg-blue-700">
+              <i class="fa fa-qrcode text-base"></i>
+              <span>手机采集</span>
+            </button>
             <!-- <div class="flex items-center gap-3">
             <button class="border border-slate-200 bg-white px-4 py-2 rounded-lg text-sm flex items-center gap-1 text-primary hover:bg-slate-50">
               <i class="fa fa-download"></i>批量导出
@@ -418,6 +422,42 @@
       </main>
     </div>
   </div>
+  <!-- 手机采集二维码弹窗 -->
+  <div id="mobileCollectModal" class="fixed inset-0 bg-slate-900/50 hidden z-[70] items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl w-[720px] max-w-full overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-textPrimary">手机端人脸采集</h2>
+          <p class="text-xs text-textSecondary mt-1">使用手机扫码，打开人员信息与人脸照片采集页面</p>
+        </div>
+        <button id="closeMobileCollect" class="w-8 h-8 rounded hover:bg-slate-100 text-textSecondary" aria-label="关闭">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      <div class="grid grid-cols-[260px_1fr] max-md:grid-cols-1">
+        <div class="bg-blue-50 p-7 flex flex-col items-center justify-center border-r border-blue-100 max-md:border-r-0 max-md:border-b">
+          <div class="bg-white p-3 rounded-lg border border-blue-200 shadow-figma">
+            <img id="mobileCollectQr" class="w-44 h-44 block" alt="手机端人脸采集二维码">
+          </div>
+          <div class="mt-4 text-sm font-medium text-textPrimary">微信或浏览器扫码</div>
+          <div class="mt-1 text-xs text-textSecondary">二维码有效期以实际服务配置为准</div>
+        </div>
+        <div class="p-7 flex flex-col justify-center">
+          <div class="flex items-start gap-3 mb-5">
+            <div class="w-9 h-9 rounded-full bg-blue-100 text-primary flex items-center justify-center shrink-0"><i class="fa fa-mobile-screen-button"></i></div>
+            <div><div class="text-sm font-medium">移动采集流程</div><div class="text-xs text-textSecondary mt-1 leading-5">填写人员身份信息，拍摄正面人脸照片，确认后提交至人脸采集库。</div></div>
+          </div>
+          <label class="text-xs text-textSecondary mb-2" for="mobileCollectUrl">H5 采集地址</label>
+          <div class="flex gap-2">
+            <input id="mobileCollectUrl" class="min-w-0 flex-1 border border-slate-200 rounded px-3 py-2 text-xs text-textPrimary outline-none focus:border-primary" value="移动端人脸采集.html">
+            <button id="refreshMobileQr" class="px-3 py-2 border border-slate-200 rounded text-sm text-primary hover:bg-blue-50" title="更新二维码"><i class="fa fa-rotate"></i></button>
+          </div>
+          <button id="copyMobileUrl" class="mt-3 w-full border border-primary text-primary rounded py-2 text-sm hover:bg-blue-50"><i class="fa fa-copy mr-2"></i>复制采集地址</button>
+          <p class="text-xs text-warningOrange mt-4 leading-5"><i class="fa fa-circle-info mr-1"></i>正式使用时，请将地址替换为手机可访问的服务器地址。</p>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- 人员详情抽屉 -->
   <div id="faceDetailDrawer" class="fixed inset-0 bg-black/40 hidden z-50">
     <aside class="absolute right-0 top-0 h-full w-[480px] max-w-full bg-white shadow-xl flex flex-col">
@@ -506,6 +546,27 @@
         tableBody.addEventListener('click', event => { const action = event.target.closest('a'); if (!action) return; const row = action.closest('tr'), cells = row.children, text = action.textContent.trim(); if (text === '查看') { const info = cells[1].innerText.split('\n').map(x => x.trim()).filter(Boolean), cert = cells[2].innerText.split('\n').map(x => x.trim()).filter(Boolean), company = cells[3].innerText.split('\n').filter(x => !x.includes('共')).join('<br>'), time = cells[6].innerText.replace('\n', ' '), status = cells[5].innerText.trim(), photo = cells[4].querySelector('img'), photoSrc = photo ? photo.src : ''; document.getElementById('detailCollectedFacePhoto').src = photoSrc; document.getElementById('basicFaceName').textContent = info[0] || '-'; document.getElementById('basicFacePhone').textContent = info[2] || info[1] || '-'; document.getElementById('detailFaceId').textContent = cert[1] || '-'; document.getElementById('detailFaceCompany').innerHTML = company || '-'; document.getElementById('detailFaceStatus').textContent = status; document.getElementById('detailFaceTime').textContent = time; show(drawer) } else if (text === '删除') { deleteRow = row; document.getElementById('faceDeleteMessage').textContent = `确定删除“${cells[1].innerText.split('\n')[0]}”的人脸采集记录吗？删除后不可恢复。`; show(confirm) } });
         ['closeFaceDetail', 'closeFaceDetailBottom'].forEach(id => document.getElementById(id).onclick = () => hide(drawer)); document.getElementById('cancelFaceDelete').onclick = () => hide(confirm); document.getElementById('confirmFaceDelete').onclick = () => { if (deleteRow) deleteRow.remove(); deleteRow = null; hide(confirm) };
       })();
+  </script>
+  <script>
+    (() => {
+      const modal = document.getElementById('mobileCollectModal');
+      const urlInput = document.getElementById('mobileCollectUrl');
+      const qrImage = document.getElementById('mobileCollectQr');
+      const show = () => { modal.classList.remove('hidden'); modal.classList.add('flex'); renderQr(); };
+      const hide = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); };
+      const getUrl = () => {
+        const value = urlInput.value.trim() || '移动端人脸采集.html';
+        try { return new URL(value, window.location.href).href; } catch (_) { return value; }
+      };
+      const renderQr = () => { qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=' + encodeURIComponent(getUrl()); };
+      document.getElementById('openMobileCollect').onclick = show;
+      document.getElementById('closeMobileCollect').onclick = hide;
+      document.getElementById('refreshMobileQr').onclick = renderQr;
+      document.getElementById('copyMobileUrl').onclick = async event => {
+        try { await navigator.clipboard.writeText(getUrl()); event.currentTarget.innerHTML = '<i class="fa fa-check mr-2"></i>已复制'; setTimeout(() => event.currentTarget.innerHTML = '<i class="fa fa-copy mr-2"></i>复制采集地址', 1500); } catch (_) { urlInput.select(); }
+      };
+      modal.addEventListener('click', event => { if (event.target === modal) hide(); });
+    })();
   </script>
   <script src="navigation.js"></script>
 </body>
