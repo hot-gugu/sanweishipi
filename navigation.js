@@ -48,7 +48,8 @@
         { title: '人脸采集库', href: '人脸采集库.html' },
         { title: '作业班次', href: '作业班次.html' }
       ]
-    }
+    },
+    { title: '产品功能说明', icon: 'fa-book', href: '产品功能说明.html' }
   ];
 
   const actionRoutes = [
