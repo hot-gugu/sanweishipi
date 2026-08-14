@@ -51,6 +51,16 @@
         { title: '作业班次', href: '作业班次.html' }
       ]
     },
+    {
+      title: '系统管理',
+      icon: 'fa-gear',
+      children: [
+        { title: '成员管理' },
+        { title: '组织架构' },
+        { title: '角色管理' },
+        { title: '岗位管理' }
+      ]
+    },
     { title: '产品功能说明', icon: 'fa-book', href: '产品功能说明.html' }
   ];
 
@@ -176,6 +186,15 @@
         font-size: 13px;
         border-radius: 8px;
       }
+      .unified-menu-item.placeholder {
+        cursor: default;
+        color: #8fa4cf;
+      }
+      .unified-menu-item.placeholder:hover {
+        background: transparent;
+        color: #8fa4cf;
+        transform: none;
+      }
       .unified-menu-footer {
         padding: 12px 16px;
         color: #8fa4cf;
@@ -208,9 +227,9 @@
   };
 
   const createItem = ({ title, icon, href }) => {
-    const item = document.createElement('a');
-    item.href = href;
-    item.className = `unified-menu-item${isSamePage(href) ? ' active' : ''}`;
+    const item = document.createElement(href ? 'a' : 'div');
+    if (href) item.href = href;
+    item.className = `unified-menu-item${href && isSamePage(href) ? ' active' : ''}${href ? '' : ' placeholder'}`;
     item.innerHTML = `${icon ? `<i class="fa ${icon}" style="width:18px;text-align:center;"></i>` : '<span style="width:7px;height:7px;border-radius:999px;background:currentColor;opacity:.65;"></span>'}<span>${title}</span>`;
     return item;
   };
