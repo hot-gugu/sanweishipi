@@ -750,7 +750,7 @@
                     <div class="flex gap-2 mt-1 justify-end">
                         <button class="text-primary text-xs" onclick="window.location.href='作业计划管理.html?action=create'">创建作业计划</button>
                         <!-- <button class="text-primary text-xs" onclick="window.location.href='作业计划管理.html?action=link'"></button> -->
-                        <button class="text-textSecondary text-xs" onclick="this.closest('.alert-item').style.display='none'">忽略</button>
+                        <button class="text-textSecondary text-xs" onclick="requestIgnoreAlert(this)">忽略</button>
                     </div>
                 </div>
             </div>
@@ -765,7 +765,7 @@
                     <div class="flex gap-2 mt-1 justify-end">
                         <button class="text-primary text-xs" onclick="window.location.href='作业计划管理.html?action=create'">创建作业计划</button>
                         <!-- <button class="text-primary text-xs" onclick="window.location.href='作业计划管理.html?action=link'"></button> -->
-                        <button class="text-textSecondary text-xs" onclick="this.closest('.alert-item').style.display='none'">忽略</button>
+                        <button class="text-textSecondary text-xs" onclick="requestIgnoreAlert(this)">忽略</button>
                     </div>
                 </div>
             </div>
@@ -974,7 +974,7 @@
                             <div class="flex gap-3">
                                 <button class="text-primary text-xs" onclick="window.location.href='作业计划管理.html?action=create'">创建作业计划</button>
                                 <button class="text-primary text-xs" onclick="window.location.href='作业计划管理.html?action=link'"></button>
-                                <button class="text-textSecondary text-xs" onclick="dismissAlert(this)">忽略</button>
+                                <button class="text-textSecondary text-xs" onclick="requestIgnoreAlert(this)">忽略</button>
                             </div>
                         </div>
                     </div>
@@ -994,7 +994,7 @@
                             <div class="flex gap-3">
                                 <button class="text-primary text-xs" onclick="window.location.href='作业计划管理.html?action=create'">创建作业计划</button>
                                 <button class="text-primary text-xs" onclick="window.location.href='作业计划管理.html?action=link'"></button>
-                                <button class="text-textSecondary text-xs" onclick="dismissAlert(this)">忽略</button>
+                                <button class="text-textSecondary text-xs" onclick="requestIgnoreAlert(this)">忽略</button>
                             </div>
                         </div>
                     </div>
@@ -1035,7 +1035,7 @@
             <div class="px-5 py-3 border-b border-darkBorder hover:bg-primary/5 cursor-pointer alert-item">
                 <div class="flex items-start gap-3">
                     <i class="fa fa-exclamation-triangle text-sky-400 mt-0.5"></i>
-                    <div class="flex-1">
+                    <!-- <div class="flex-1">
                         <div class="flex items-center justify-between mb-1">
                             <div class="font-medium">摄像头离线</div>
                             <span class="text-xs px-1.5 rounded bg-sky-500/20 text-sky-300">提示</span>
@@ -1045,7 +1045,7 @@
                             <div class="text-textSecondary text-xs">2026-08-07 10:20:00</div>
                             <button class="text-primary text-xs" onclick="window.location.href='AI识别的违章复核.html'">AI预警核查</button>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="px-5 py-3 border-b border-darkBorder hover:bg-primary/5 cursor-pointer alert-item">
@@ -1126,17 +1126,17 @@
                             <div class="flex gap-3">
                                 <button class="text-primary text-xs" onclick="window.location.href='作业计划管理.html?action=create'">创建作业计划</button>
                                 <button class="text-primary text-xs" onclick="window.location.href='作业计划管理.html?action=link'"></button>
-                                <button class="text-textSecondary text-xs" onclick="dismissAlert(this)">忽略</button>
+                                <button class="text-textSecondary text-xs" onclick="requestIgnoreAlert(this)">忽略</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="px-5 py-3 hover:bg-primary/5 cursor-pointer alert-item">
-                <div class="flex items-start gap-3">
-                    <i class="fa fa-exclamation-triangle text-sky-400 mt-0.5"></i>
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-1">
+            <!-- <div class="px-5 py-3 hover:bg-primary/5 cursor-pointer alert-item"> -->
+                <!-- <div class="flex items-start gap-3"> -->
+                    <!-- <i class="fa fa-exclamation-triangle text-sky-400 mt-0.5"></i> -->
+                    <!-- <div class="flex-1"> -->
+                        <!-- <div class="flex items-center justify-between mb-1">
                             <div class="font-medium">作业超时预警</div>
                             <span class="text-xs px-1.5 rounded bg-sky-500/20 text-sky-300">提示</span>
                         </div>
@@ -1144,16 +1144,36 @@
                         <div class="flex items-center justify-between">
                             <div class="text-textSecondary text-xs">2026-08-07 10:00:00</div>
                             <button class="text-primary text-xs" onclick="window.location.href='AI识别的违章复核.html'">AI预警核查</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </div> -->
+                    <!-- </div> -->
+                <!-- </div> -->
+            <!-- </div> -->
         </div>
         <div class="border-t border-darkBorder px-5 py-3 flex items-center justify-between flex-shrink-0">
             <span class="text-textSecondary text-xs">共 12 条预警 · 未处理 12</span>
             <div class="flex gap-3">
                 <button class="px-4 py-1.5 rounded bg-darkBorder text-sm hover:bg-primary/20" onclick="closeAllSidebars()">关闭</button>
-                <button class="px-4 py-1.5 rounded bg-primary text-sm text-white hover:opacity-90">批量处理</button>
+                <!-- <button class="px-4 py-1.5 rounded bg-primary text-sm text-white hover:opacity-90">批量处理</button> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 忽略同类预警二次确认弹窗 -->
+    <div id="ignore-alert-modal" class="fixed inset-0 bg-black/60 z-[70] hidden flex items-center justify-center px-4" style="backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)" onclick="closeIgnoreAlertModal()">
+        <div class="w-[440px] max-w-full bg-darkPanel rounded-xl border border-darkBorder shadow-2xl" onclick="event.stopPropagation()">
+            <div class="px-6 pt-6 pb-4 flex items-start gap-4">
+                <div class="w-11 h-11 rounded-full bg-orange-500/15 text-orange-400 flex items-center justify-center shrink-0">
+                    <i class="fa fa-exclamation-triangle text-lg"></i>
+                </div>
+                <div class="min-w-0">
+                    <h3 class="text-lg font-semibold text-textMain">确认忽略同类预警？</h3>
+                    <p class="text-textSecondary text-sm mt-2 leading-6">确认后，<span class="text-orange-400 font-medium">1 小时内</span>将不再显示摄像头“<span id="ignore-alert-camera" class="text-textMain"></span>”的“<span id="ignore-alert-type" class="text-textMain"></span>”预警消息。</p>
+                    <p class="text-textSecondary text-xs mt-2">其他摄像头的同类预警不受影响，到期后将自动恢复。</p>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-darkBorder flex justify-end gap-3">
+                <button class="px-5 py-2 rounded bg-darkBorder text-sm hover:bg-primary/20" onclick="closeIgnoreAlertModal()">取消</button>
+                <button class="px-5 py-2 rounded bg-orange-500 text-white text-sm hover:bg-orange-600" onclick="confirmIgnoreAlert()">确认忽略</button>
             </div>
         </div>
     </div>
@@ -1432,11 +1452,71 @@
             document.getElementById('carousel-modal').classList.add('hidden');
         }
 
-        // 忽略预警消息：隐藏该条预警
-        function dismissAlert(btn) {
-            var item = btn.closest('.alert-item');
-            if (item) item.style.display = 'none';
+        // 忽略预警消息：二次确认后，1小时内隐藏同类型预警
+        var pendingIgnoreAlert = null;
+        var ALERT_IGNORE_DURATION = 60 * 60 * 1000;
+
+        function getAlertType(item) {
+            if (!item) return '该预警';
+            var title = item.querySelector('.font-medium') || item.querySelector('.text-sm');
+            return title ? title.textContent.trim() : '该预警';
         }
+
+        function getAlertCamera(item) {
+            if (!item) return '当前摄像头';
+            var camera = item.querySelector('.flex-1 > .text-textSecondary.text-xs');
+            return camera ? camera.textContent.trim() : '当前摄像头';
+        }
+
+        function getIgnoreAlertKey(type, camera) {
+            return 'ignoredAlert:' + encodeURIComponent(camera) + ':' + encodeURIComponent(type);
+        }
+
+        function requestIgnoreAlert(btn) {
+            var item = btn.closest('.alert-item');
+            if (!item) return;
+            pendingIgnoreAlert = { item: item, type: getAlertType(item), camera: getAlertCamera(item) };
+            document.getElementById('ignore-alert-camera').textContent = pendingIgnoreAlert.camera;
+            document.getElementById('ignore-alert-type').textContent = pendingIgnoreAlert.type;
+            document.getElementById('ignore-alert-modal').classList.remove('hidden');
+        }
+
+        function closeIgnoreAlertModal() {
+            document.getElementById('ignore-alert-modal').classList.add('hidden');
+            pendingIgnoreAlert = null;
+        }
+
+        function hideIgnoredAlert(type, camera) {
+            document.querySelectorAll('.alert-item').forEach(function (item) {
+                if (getAlertType(item) === type && getAlertCamera(item) === camera) item.style.display = 'none';
+            });
+        }
+
+        function confirmIgnoreAlert() {
+            if (!pendingIgnoreAlert) return;
+            var type = pendingIgnoreAlert.type;
+            var camera = pendingIgnoreAlert.camera;
+            try {
+                localStorage.setItem(getIgnoreAlertKey(type, camera), String(Date.now() + ALERT_IGNORE_DURATION));
+            } catch (e) {}
+            hideIgnoredAlert(type, camera);
+            closeIgnoreAlertModal();
+        }
+
+        function applyIgnoredAlerts() {
+            document.querySelectorAll('.alert-item').forEach(function (item) {
+                var type = getAlertType(item);
+                var camera = getAlertCamera(item);
+                var storageKey = getIgnoreAlertKey(type, camera);
+                try {
+                    var expiresAt = Number(localStorage.getItem(storageKey) || 0);
+                    if (expiresAt > Date.now()) item.style.display = 'none';
+                    else if (expiresAt) localStorage.removeItem(storageKey);
+                } catch (e) {}
+            });
+        }
+
+        applyIgnoredAlerts();
 
         // 跳转到AI预警实时和倒查标记页面
         function gotoAlertReview() {
