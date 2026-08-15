@@ -775,6 +775,60 @@
             }, true);
         })();
     </script>
+    <script>
+        (() => {
+            const tableBody = document.getElementById('areaTableBody');
+            const cameraField = document.getElementById('childCameraField');
+            const pickerButton = document.getElementById('openCameraPicker');
+            const linkedList = document.createElement('div');
+            linkedList.id = 'linkedCameraList';
+            linkedList.className = 'hidden border border-borderLine radius-sm overflow-hidden';
+            pickerButton.insertAdjacentElement('afterend', linkedList);
+
+            const showPickerButton = () => {
+                pickerButton.classList.remove('hidden');
+                linkedList.classList.add('hidden');
+                linkedList.innerHTML = '';
+            };
+
+            tableBody.addEventListener('click', event => {
+                const action = event.target.closest('span.cursor-pointer');
+                if (!action) return;
+                const actionName = action.textContent.trim();
+
+                if (actionName === '新增下级') {
+                    showPickerButton();
+                    return;
+                }
+                if (actionName !== '编辑') return;
+
+                const row = action.closest('tr');
+                const isLevelOne = row.children[2].textContent.trim() === '一级';
+                if (isLevelOne) return;
+
+                const cameraNames = [...row.children[6].querySelectorAll('div')]
+                    .map(item => item.textContent.trim())
+                    .filter(Boolean);
+
+                pickerButton.classList.add('hidden');
+                linkedList.classList.remove('hidden');
+                linkedList.innerHTML = cameraNames.length
+                    ? cameraNames.map((cameraName, index) => `
+                        <div class="flex items-center justify-between px-3 py-3 ${index ? 'border-t border-borderLine' : ''}">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="w-8 h-8 rounded bg-blue-50 text-primary flex items-center justify-center flex-shrink-0">
+                                    <i class="fa fa-video-camera"></i>
+                                </span>
+                                <span class="text-sm text-textMain truncate">${cameraName}</span>
+                            </div>
+                         
+                        </div>`).join('')
+                    : '<div class="px-3 py-4 text-sm text-textLight text-center">暂无关联摄像头</div>';
+            }, true);
+
+            document.getElementById('addRootAreaButton').addEventListener('click', showPickerButton);
+        })();
+    </script>
     <script src="navigation.js"></script>
 </body>
 

@@ -318,6 +318,71 @@
             font-size: 14px;
         }
 
+        .camera-switcher {
+            margin-bottom: 12px;
+        }
+
+        .camera-switcher-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #9fb0cc;
+        }
+
+        .camera-switcher-list {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .camera-switch-item {
+            min-width: 0;
+            padding: 9px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-card);
+            color: #c7d5ee;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color .18s ease, background .18s ease;
+        }
+
+        .camera-switch-item:hover {
+            border-color: #487dd8;
+        }
+
+        .camera-switch-item.active {
+            border-color: var(--color-primary);
+            background: rgba(37, 99, 235, .16);
+            box-shadow: inset 3px 0 0 var(--color-primary);
+        }
+
+        .camera-switch-name {
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .camera-switch-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            margin-top: 5px;
+            color: #7f91b2;
+            font-size: 11px;
+        }
+
+        .camera-online {
+            color: #10b981;
+            white-space: nowrap;
+        }
+
         .video-player-wrap {
             background: #000;
             border-radius: 6px;
@@ -890,6 +955,107 @@
             border: none;
         }
 
+        /* ===== 视频下载侧边栏 ===== */
+        .download-sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .48);
+            z-index: 10008;
+            display: none;
+        }
+        .download-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 460px;
+            max-width: 100%;
+            background: #fff;
+            color: #1f2937;
+            z-index: 10009;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform .3s ease;
+            box-shadow: -4px 0 24px rgba(0, 0, 0, .2);
+        }
+        .download-sidebar.open { transform: translateX(0); }
+        .download-sidebar-header {
+            height: 60px;
+            padding: 0 22px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .download-sidebar-header h3 { font-size: 18px; font-weight: 600; }
+        .download-sidebar-body { flex: 1; overflow-y: auto; padding: 22px; }
+        .download-camera-summary {
+            padding: 14px;
+            border-radius: 8px;
+            background: #f3f7ff;
+            border: 1px solid #dbe7ff;
+            margin-bottom: 22px;
+        }
+        .download-summary-title { color: #1d4ed8; font-weight: 600; font-size: 14px; }
+        .download-summary-meta { color: #64748b; font-size: 12px; line-height: 1.8; margin-top: 6px; }
+        .download-form-item { margin-bottom: 20px; }
+        .download-form-item label { display: block; font-size: 14px; margin-bottom: 8px; }
+        .download-form-item input,
+        .download-form-item select {
+            width: 100%;
+            height: 42px;
+            padding: 0 12px;
+            border: 1px solid #d8dbe3;
+            border-radius: 6px;
+            background: #fff;
+            color: #1f2937;
+            outline: none;
+        }
+        .download-form-item input:focus,
+        .download-form-item select:focus { border-color: var(--color-primary); }
+        .download-duration {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 14px;
+            background: #f8fafc;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #64748b;
+        }
+        .download-duration strong { color: #1f2937; font-size: 15px; }
+        .download-error { min-height: 20px; margin-top: 8px; color: #ef4444; font-size: 12px; }
+        .download-tip {
+            margin-top: 18px;
+            padding: 12px 14px;
+            border-radius: 6px;
+            background: #fffbeb;
+            color: #92400e;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+        .download-sidebar-footer {
+            padding: 16px 22px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .download-sidebar-footer button { flex: 1; height: 42px; border-radius: 6px; cursor: pointer; }
+        .download-cancel { background: #fff; border: 1px solid #d8dbe3; color: #374151; }
+        .download-confirm { background: var(--color-primary); border: none; color: #fff; }
+        .download-success {
+            display: none;
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 6px;
+            background: #ecfdf5;
+            color: #047857;
+            font-size: 13px;
+        }
+
         /* tab内容切换隐藏 */
         .tab-panel {
             display: none;
@@ -1033,20 +1199,40 @@
 
             <!-- 中间视频区域 -->
             <div class="col-center-video">
-                <div class="video-info-bar">
-                    摄像头：运输巷掘进机头（IPC-123458）｜作业位置：井下运输巷-123水平｜作业时间：2024-05-18 08:00 - 18:00
+                <div class="camera-switcher">
+                    <div class="camera-switcher-title">
+                        <span>关联摄像头（3）</span>
+                        <span>请选择要查看的视频</span>
+                    </div>
+                    <div class="camera-switcher-list">
+                        <button type="button" class="camera-switch-item active" data-name="运输巷掘进机头" data-code="IPC-123458" data-image="https://picsum.photos/id/1033/1200/680">
+                            <span class="camera-switch-name">运输巷掘进机头001摄像头</span>
+                            <span class="camera-switch-meta"><span>IPC-123458</span><span class="camera-online">● 已回传</span></span>
+                        </button>
+                        <button type="button" class="camera-switch-item" data-name="运输巷中段摄像头" data-code="IPC-123459" data-image="https://picsum.photos/id/1011/1200/680">
+                            <span class="camera-switch-name">运输巷中段摄像头</span>
+                            <span class="camera-switch-meta"><span>IPC-123459</span><span class="camera-online" style="color:rgb(187, 79, 79);">● 未回传</span></span>
+                        </button>
+                        <button type="button" class="camera-switch-item" data-name="运输巷作业面摄像头" data-code="IPC-123460" data-image="https://picsum.photos/id/1031/1200/680">
+                            <span class="camera-switch-name">运输巷作业面摄像头</span>
+                            <span class="camera-switch-meta"><span>IPC-123460</span><span class="camera-online" style="color:rgb(187, 79, 79);  ">● 未回传</span></span>
+                        </button>
+                    </div>
+                </div>
+                <div id="current-camera-info" class="video-info-bar">
+                    摄像头：<span id="current-camera-name">运输巷掘进机头001摄像头</span>（<span id="current-camera-code">IPC-123458</span>）｜作业位置：井下运输巷-123水平｜作业时间：2024-05-18 08:00 - 18:00
                 </div>
                 <div class="video-player-wrap">
-                    <img alt="井下监控画面" src="https://picsum.photos/id/1033/1200/680">
+                    <img id="current-camera-video" alt="运输巷掘进机头监控画面" src="https://picsum.photos/id/1033/1200/680">
                 </div>
 
                 <div class="timeline-wrap">
                     <div class="timeline-legend">
-                        <div style="display:flex;align-items:center;gap:6px;">
+                        <!-- <div style="display:flex;align-items:center;gap:6px;">
                             <select>
-                                <option>全部通道</option>
+                                <option>当前摄像头通道</option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="legend-item">
                             <span class="dot-blue"></span>
                             <span>录像</span>
@@ -1078,7 +1264,7 @@
                         <div class="time-quick-btn">10M</div>
                         <input class="time-input" value="10:24:36">
                         <button class="btn btn-default">违章/隐患标记</button>
-                        <button class="btn btn-primary">下载视频</button>
+                        <button class="btn btn-primary" onclick="openDownloadDrawer()">下载视频</button>
                     </div>
                 </div>
             </div>
@@ -1386,6 +1572,54 @@
         </div>
     </div>
 
+    <!-- 视频下载侧边栏 -->
+    <div class="download-sidebar-overlay" id="download-overlay" onclick="closeDownloadDrawer()"></div>
+    <aside class="download-sidebar" id="download-sidebar" aria-label="下载视频">
+        <div class="download-sidebar-header">
+            <div>
+                <h3>下载视频</h3>
+                <div style="font-size:12px;color:#94a3b8;margin-top:3px;">选择需要导出的录像时间范围</div>
+            </div>
+            <span class="detail-sidebar-close" onclick="closeDownloadDrawer()">&times;</span>
+        </div>
+        <div class="download-sidebar-body">
+            <div class="download-success" id="download-success">下载任务已创建，请稍候在浏览器下载列表中查看。</div>
+            <div class="download-camera-summary">
+                <div class="download-summary-title" id="download-camera-name">运输巷掘进机头001摄像头</div>
+                <div class="download-summary-meta">
+                    设备编号：<span id="download-camera-code">IPC-123458</span><br>
+                    作业位置：井下运输巷-123水平<br>
+                    可下载录像：2024-05-18 08:00 至 18:00
+                </div>
+            </div>
+            <div class="download-form-item">
+                <label><span style="color:#ef4444;">*</span> 开始时间</label>
+                <input id="download-start-time" type="datetime-local" value="2024-05-18T08:00" min="2024-05-18T08:00" max="2024-05-18T18:00" onchange="updateDownloadDuration()">
+            </div>
+            <div class="download-form-item">
+                <label><span style="color:#ef4444;">*</span> 结束时间</label>
+                <input id="download-end-time" type="datetime-local" value="2024-05-18T10:00" min="2024-05-18T08:00" max="2024-05-18T18:00" onchange="updateDownloadDuration()">
+            </div>
+            <div class="download-form-item">
+                <label>文件格式</label>
+                <select id="download-format">
+                    <option value="mp4">MP4（推荐）</option>
+                    <option value="avi">AVI</option>
+                </select>
+            </div>
+            <div class="download-duration">
+                <!-- <span>预计视频时长</span> -->
+                <!-- <strong id="download-duration-text">2小时</strong> -->
+            </div>
+            <div class="download-error" id="download-error"></div>
+            <!-- <div class="download-tip">单次下载最长支持 6 小时。录像生成可能需要一定时间，请勿重复提交。</div> -->
+        </div>
+        <div class="download-sidebar-footer">
+            <button class="download-cancel" onclick="closeDownloadDrawer()">取消</button>
+            <button class="download-confirm" id="confirm-download-button" onclick="confirmVideoDownload()">确认下载</button>
+        </div>
+    </aside>
+
     <!-- XXXX楼栋-楼层（或者室外位置信息）弹窗 -->
     <div id="gis-overlay" onclick="closeGisMap()" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);"></div>
     <div id="gis-modal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.9);opacity:0;z-index:10001;width:720px;background:#fff;border-radius:12px;display:flex;flex-direction:column;overflow:hidden;transition:all 0.25s ease;pointer-events:none;">
@@ -1623,6 +1857,79 @@
             modal.style.transform = 'translate(-50%,-50%) scale(0.9)';
             modal.style.pointerEvents = 'none';
         }
+
+        // ===== 视频下载侧边栏 =====
+        function openDownloadDrawer() {
+            document.getElementById('download-camera-name').textContent = document.getElementById('current-camera-name').textContent;
+            document.getElementById('download-camera-code').textContent = document.getElementById('current-camera-code').textContent;
+            document.getElementById('download-error').textContent = '';
+            document.getElementById('download-success').style.display = 'none';
+            document.getElementById('confirm-download-button').textContent = '确认下载';
+            document.getElementById('download-overlay').style.display = 'block';
+            document.getElementById('download-sidebar').classList.add('open');
+            updateDownloadDuration();
+        }
+
+        function closeDownloadDrawer() {
+            document.getElementById('download-overlay').style.display = 'none';
+            document.getElementById('download-sidebar').classList.remove('open');
+        }
+
+        function getDownloadRange() {
+            var start = new Date(document.getElementById('download-start-time').value);
+            var end = new Date(document.getElementById('download-end-time').value);
+            return { start: start, end: end, minutes: (end - start) / 60000 };
+        }
+
+        function updateDownloadDuration() {
+            var range = getDownloadRange();
+            var error = document.getElementById('download-error');
+            var duration = document.getElementById('download-duration-text');
+            error.textContent = '';
+            if (!Number.isFinite(range.minutes) || range.minutes <= 0) {
+                duration.textContent = '--';
+                error.textContent = '结束时间必须晚于开始时间。';
+                return false;
+            }
+            var hours = Math.floor(range.minutes / 60);
+            var minutes = Math.round(range.minutes % 60);
+            duration.textContent = (hours ? hours + '小时' : '') + (minutes ? minutes + '分钟' : '');
+            if (range.minutes > 360) {
+                error.textContent = '单次下载时间范围不能超过 6 小时。';
+                return false;
+            }
+            return true;
+        }
+
+        function confirmVideoDownload() {
+            if (!updateDownloadDuration()) return;
+            var button = document.getElementById('confirm-download-button');
+            button.textContent = '正在创建...';
+            button.disabled = true;
+            setTimeout(function () {
+                document.getElementById('download-success').style.display = 'block';
+                button.textContent = '已创建下载任务';
+                button.disabled = false;
+            }, 500);
+        }
+
+        // 同一作业关联多台摄像头时，切换当前查看的视频
+        document.querySelectorAll('.camera-switch-item').forEach(function (item) {
+            item.addEventListener('click', function () {
+                document.querySelectorAll('.camera-switch-item').forEach(function (camera) {
+                    camera.classList.remove('active');
+                });
+                item.classList.add('active');
+
+                var name = item.dataset.name;
+                var code = item.dataset.code;
+                var videoImage = document.getElementById('current-camera-video');
+                document.getElementById('current-camera-name').textContent = name;
+                document.getElementById('current-camera-code').textContent = code;
+                videoImage.src = item.dataset.image;
+                videoImage.alt = name + '监控画面';
+            });
+        });
 
     </script>
     <script src="navigation.js"></script>
