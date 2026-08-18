@@ -26,15 +26,16 @@
     .doc-content{flex:1}.doc-type{font-size:12px;color:var(--blue);font-weight:700;letter-spacing:1px}.doc-content h3{margin:8px 0;font-size:18px}.doc-content p{margin:0;color:var(--muted);font-size:13px;line-height:1.65}
     .arrow{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#f1f5fb;color:var(--blue);font-size:21px}
     .tip-card{padding:24px;border:1px solid var(--line);border-radius:14px;background:#fff}.tip-card h3{font-size:15px;margin:0 0 12px}.tip-card p{font-size:13px;color:var(--muted);line-height:1.75;margin:0}
-    .reader{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(15,36,78,.06);overflow:hidden}
-    .reader[hidden]{display:none}.reader-head{min-height:62px;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);background:#f9fbfe}
+    .reader{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(15,36,78,.06);overflow:visible}
+    .reader[hidden]{display:none}.reader-head{min-height:62px;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);border-radius:14px 14px 0 0;background:#f9fbfe}
     .reader-title{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}.reader-title i{color:var(--blue)}
     .reader-actions{display:flex;align-items:center;gap:10px}.reader-link,.reader-close{padding:7px 12px;border-radius:7px;border:1px solid var(--line);background:#fff;color:#53627a;text-decoration:none;font-size:12px;cursor:pointer}.reader-link:hover,.reader-close:hover{border-color:#8eb1ff;color:var(--blue)}
-    .markdown-body{max-width:940px;margin:0 auto;padding:34px 40px 50px;font-size:15px;line-height:1.85;color:#27344c;overflow-wrap:anywhere}
+    .reader-layout{display:grid;grid-template-columns:220px minmax(0,1fr);align-items:start}.document-toc{position:sticky;top:16px;margin:26px 0 26px 22px;padding:18px 12px;border:1px solid var(--line);border-radius:10px;background:#f9fbfe;max-height:calc(100vh - 40px);overflow-y:auto}.document-toc[hidden]{display:none}.toc-title{padding:0 10px 12px;color:#17233d;font-size:14px;font-weight:700;border-bottom:1px solid var(--line)}.toc-list{display:flex;flex-direction:column;gap:4px;margin-top:10px}.toc-link{display:block;padding:9px 10px;border-radius:7px;color:#69758c;text-decoration:none;font-size:13px;line-height:1.45;transition:.18s}.toc-link:hover{color:var(--blue);background:#edf3ff}.toc-link.active{color:var(--blue);font-weight:700;background:#e8f0ff;box-shadow:inset 3px 0 0 var(--blue)}
+    .markdown-body{width:100%;max-width:940px;margin:0 auto;padding:34px 40px 50px;font-size:15px;line-height:1.85;color:#27344c;overflow-wrap:anywhere}.markdown-body .document-section-anchor{scroll-margin-top:22px}
     .markdown-body h1,.markdown-body h2,.markdown-body h3{color:#17233d;line-height:1.4}.markdown-body h1{margin:0 0 24px;padding-bottom:14px;border-bottom:1px solid var(--line);font-size:28px}.markdown-body h2{margin:34px 0 14px;font-size:21px}.markdown-body h3{margin:26px 0 12px;font-size:17px}
     .markdown-body p{margin:12px 0}.markdown-body ul,.markdown-body ol{padding-left:26px}.markdown-body li{margin:5px 0}.markdown-body blockquote{margin:18px 0;padding:10px 18px;border-left:4px solid var(--blue);background:#f3f7ff;color:#53627a}.markdown-body code{padding:2px 6px;border-radius:5px;background:#f0f3f8;color:#d14;font-family:Consolas,monospace}.markdown-body pre{padding:18px;border-radius:9px;background:#17233d;color:#e7eefc;overflow:auto}.markdown-body pre code{padding:0;background:transparent;color:inherit}.markdown-body img{display:block;max-width:100%;height:auto;margin:22px auto;border-radius:10px;border:1px solid var(--line)}.markdown-body table{width:100%;border-collapse:collapse;margin:18px 0}.markdown-body th,.markdown-body td{padding:10px 12px;border:1px solid var(--line);text-align:left}.markdown-body th{background:#f5f8fc}
     .reader-state{padding:48px 24px;text-align:center;color:var(--muted)}.reader-state i{display:block;margin-bottom:12px;color:var(--blue);font-size:24px}.reader-error{color:#c0392b}.reader-error a{color:var(--blue)}
-    @media(max-width:900px){main{padding:0 18px 36px}.cards{grid-template-columns:1fr}.doc-card{grid-column:auto}.hero{padding:28px 24px}}
+    @media(max-width:900px){main{padding:0 18px 36px}.cards{grid-template-columns:1fr}.doc-card{grid-column:auto}.hero{padding:28px 24px}.reader-layout{grid-template-columns:1fr}.document-toc{position:static;margin:18px 18px 0;max-height:none}.toc-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:560px){.doc-card{align-items:flex-start;padding:20px}.arrow{display:none}.hero h1{font-size:24px}.reader-head{align-items:flex-start;flex-direction:column}.markdown-body{padding:26px 20px 38px}}
   </style>
 </head>
@@ -80,12 +81,19 @@
             <button id="close-document" class="reader-close" type="button">收起文档</button>
           </div>
         </header>
-        <article id="markdown-content" class="markdown-body"></article>
+        <div class="reader-layout">
+          <aside id="document-toc" class="document-toc" aria-label="文档章节导航" hidden>
+            <div class="toc-title">内容导航</div>
+            <nav id="toc-list" class="toc-list"></nav>
+          </aside>
+          <article id="markdown-content" class="markdown-body"></article>
+        </div>
       </section>
     </section>
   </main>
-  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <script src="marked.min.js"></script>
+  <script src="purify.min.js"></script>
+  <script src="产品功能说明内嵌.js"></script>
   <script src="navigation.js"></script>
   <script>
     (() => {
@@ -94,7 +102,61 @@
       const closeButton = document.getElementById('close-document');
       const reader = document.getElementById('document-reader');
       const content = document.getElementById('markdown-content');
+      const toc = document.getElementById('document-toc');
+      const tocList = document.getElementById('toc-list');
       let loaded = false;
+      let sectionObserver;
+
+      const loadMarkdown = async () => {
+        if (location.protocol === 'file:' && typeof window.PRODUCT_DOC_MARKDOWN === 'string') {
+          return window.PRODUCT_DOC_MARKDOWN;
+        }
+        try {
+          const response = await fetch(encodeURI(sourceFile), { cache: 'no-cache' });
+          if (!response.ok) throw new Error(`文档请求失败（${response.status}）`);
+          return await response.text();
+        } catch (error) {
+          if (typeof window.PRODUCT_DOC_MARKDOWN === 'string') return window.PRODUCT_DOC_MARKDOWN;
+          throw error;
+        }
+      };
+
+      const buildSectionNavigation = () => {
+        const sectionPattern = /^(说在前面[：:]?|第[一二三四五六七八九十百零〇两\d]+部分[：:]?\s*.*)$/;
+        const sections = [...content.children].map(element => {
+          const firstLine = element.innerText.split(/\r?\n/)[0].trim();
+          const match = firstLine.match(sectionPattern);
+          if (!match) return null;
+          return { element, label: match[1].trim() };
+        }).filter(Boolean);
+
+        toc.hidden = sections.length === 0;
+        tocList.innerHTML = sections.map((section, index) => {
+          section.element.id = `document-section-${index + 1}`;
+          section.element.classList.add('document-section-anchor');
+          return `<a class="toc-link${index === 0 ? ' active' : ''}" href="#${section.element.id}" data-section-id="${section.element.id}">${section.label}</a>`;
+        }).join('');
+
+        tocList.querySelectorAll('.toc-link').forEach(link => {
+          link.addEventListener('click', event => {
+            event.preventDefault();
+            document.getElementById(link.dataset.sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.replaceState(null, '', `#${link.dataset.sectionId}`);
+          });
+        });
+
+        sectionObserver?.disconnect();
+        if (!sections.length) return;
+        sectionObserver = new IntersectionObserver(entries => {
+          const visible = entries.filter(entry => entry.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+          if (!visible) return;
+          tocList.querySelectorAll('.toc-link').forEach(link => {
+            link.classList.toggle('active', link.dataset.sectionId === visible.target.id);
+          });
+        }, { rootMargin: '-12% 0px -72% 0px', threshold: 0 });
+        sections.forEach(section => sectionObserver.observe(section.element));
+      };
 
       const showState = (html, className = 'reader-state') => {
         content.className = `markdown-body ${className}`;
@@ -112,13 +174,12 @@
         showState('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>正在加载产品功能说明…');
         try {
           if (!window.marked) throw new Error('Markdown 解析库未加载');
-          const response = await fetch(encodeURI(sourceFile), { cache: 'no-cache' });
-          if (!response.ok) throw new Error(`文档请求失败（${response.status}）`);
-          const markdown = await response.text();
+          const markdown = await loadMarkdown();
           marked.setOptions({ gfm: true, breaks: true });
           const parsed = marked.parse(markdown);
           content.className = 'markdown-body';
           content.innerHTML = window.DOMPurify ? DOMPurify.sanitize(parsed) : parsed;
+          buildSectionNavigation();
           loaded = true;
           reader.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } catch (error) {
