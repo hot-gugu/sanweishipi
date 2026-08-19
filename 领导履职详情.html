@@ -409,6 +409,6 @@
         document.querySelectorAll('[data-hazard-detail-tab]').forEach(button => button.addEventListener('click', () => { const info = button.dataset.hazardDetailTab === 'info'; document.getElementById('hazardInfoPanel').classList.toggle('hidden', !info); document.getElementById('hazardRecordPanel').classList.toggle('hidden', info); document.querySelectorAll('.hazard-detail-tab').forEach(tab => tab.className = `hazard-detail-tab border px-10 py-2 text-sm ${tab === button ? 'bg-primary text-white border-primary' : 'border-borderLine'}`); }));
         renderFindingTable('violation');
     </script>
-    <script src="navigation.js?v=20260819"></script>
+    <script src="navigation.js?v=20260819-2"></script>
 </body>
 </html>
