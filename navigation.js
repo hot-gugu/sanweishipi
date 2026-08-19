@@ -33,7 +33,7 @@
         { title: '算力智能调度', href: '算力智能调度.html' },
         { title: '算法管理', href: '算法管理.html' },
         { title: '算法精准度分析', href: '算法精准度分析列表.html' },
-        { title: '数据回溯', href: '数据回溯正负样本.html' }
+        { title: '样本库', href: '数据回溯正负样本.html' }
       ]
     },
     {
