@@ -329,12 +329,6 @@
                     </div>
                 </div>
                 <div class="bg-darkCard rounded-lg p-3 border border-darkBorder card-glow">
-                    <div class="text-sm mb-2">隐患位置分布(TOP10)</div>
-                    <div class="chart-wrap">
-                        <canvas id="chartPlace"></canvas>
-                    </div>
-                </div>
-                <div class="bg-darkCard rounded-lg p-3 border border-darkBorder card-glow">
                     <div class="text-sm mb-2">隐患人员分布(TOP10)</div>
                     <div class="chart-wrap">
                         <canvas id="chartPerson"></canvas>
@@ -351,21 +345,6 @@
                             <canvas id="chartRepeat"></canvas>
                         </div>
                         <div class="pie-legend-box" id="legendRepeat"></div>
-                    </div>
-                </div>
-                <div class="bg-darkCard rounded-lg p-3 border border-darkBorder card-glow">
-                    <div class="text-sm mb-2">隐患超期未整改分析</div>
-                    <div class="chart-wrap pie-layout">
-                        <div class="pie-canvas-box h-full">
-                            <canvas id="chartOverdue"></canvas>
-                        </div>
-                        <div class="pie-legend-box" id="legendOverdue"></div>
-                    </div>
-                </div>
-                <div class="bg-darkCard rounded-lg p-3 border border-darkBorder card-glow">
-                    <div class="text-sm mb-2">隐患整改及时率趋势</div>
-                    <div class="chart-wrap">
-                        <canvas id="chartOnTimeRate"></canvas>
                     </div>
                 </div>
             </div>
@@ -487,22 +466,6 @@
                 }
             }
         })
-        //隐患位置TOP10
-        new Chart(document.getElementById("chartPlace"),{
-            type:"bar",indexAxis:"y",
-            data:{
-                labels:["-362水平","主井","提升斜井","破碎斜道","皮带巷","泵房","机修车间","材料巷","辅平巷","破碎斜"],
-                datasets:[{data:[652,512,468,402,356,298,256,214,186,152],backgroundColor:"#1690FF"}]
-            },
-            options:{
-                maintainAspectRatio:false,
-                plugins:{legend:{display:false}},
-                scales:{
-                    x:{grid:{color:"#21355E"},ticks:{color:"#8492B3"}},
-                    y:{grid:{color:"#21355E"},ticks:{color:"#8492B3"}}
-                }
-            }
-        })
         //隐患人员TOP10
         new Chart(document.getElementById("chartPerson"),{
             type:"bar",indexAxis:"y",
@@ -530,32 +493,6 @@
         })
         buildLegend("legendRepeat", repeatLabels, colorList);
 
-        //超期未整改分析
-        const overdueLabels = ["≤7天","8-15天","16-30天",">30天"];
-        const overdueData = [236,150,78,42];
-        new Chart(document.getElementById("chartOverdue"),{
-            type:"doughnut",
-            data:{ labels:overdueLabels, datasets:[{data:overdueData, backgroundColor:colorList}] },
-            options:{...darkChartOpt}
-        })
-        buildLegend("legendOverdue", overdueLabels, colorList);
-
-        //整改及时率趋势
-        new Chart(document.getElementById("chartOnTimeRate"),{
-            type:"line",
-            data:{
-                labels:["12月","1月","2月","3月","4月","5月"],
-                datasets:[{data:[68.5,70.3,72.8,72.6,77.2,78.6],tension:0.3,borderColor:"#00C48C"}]
-            },
-            options:{
-                maintainAspectRatio:false,
-                plugins:{legend:{display:false}},
-                scales:{
-                    x:{grid:{color:"#21355E"},ticks:{color:"#8492B3"}},
-                    y:{grid:{color:"#21355E"},ticks:{color:"#8492B3"}}
-                }
-            }
-        })
     </script>
     <script src="navigation.js?v=20260819-2"></script>
 </body>

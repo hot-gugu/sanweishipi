@@ -242,8 +242,6 @@
                                 <div class="text-slate-500 text-sm">作业计划</div>
                                 <div class="text-[24px] font-semibold text-slate-800">128 <span
                                         class="text-sm font-normal text-slate-500">项</span></div>
-                                <div class="text-xs mt-1 text-slate-400">较昨日 <span class="text-emerald-500">↑12%</span>
-                                </div>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -254,7 +252,6 @@
                                 <div class="text-slate-500 text-sm">危险作业</div>
                                 <div class="text-[24px] font-semibold text-slate-800">46 <span
                                         class="text-sm font-normal text-slate-500">项</span></div>
-                                <div class="text-xs mt-1 text-slate-400">较昨日 <span class="text-red-500">↑8%</span></div>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -265,8 +262,6 @@
                                 <div class="text-slate-500 text-sm">无视频作业</div>
                                 <div class="text-[24px] font-semibold text-slate-800">8 <span
                                         class="text-sm font-normal text-slate-500">项</span></div>
-                                <div class="text-xs mt-1 text-slate-400">较昨日 <span class="text-emerald-500">↓2%</span>
-                                </div>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -277,7 +272,6 @@
                                 <div class="text-slate-500 text-sm">未回传作业</div>
                                 <div class="text-[24px] font-semibold text-slate-800">15 <span
                                         class="text-sm font-normal text-slate-500">项</span></div>
-                                <div class="text-xs mt-1 text-slate-400">较昨日 <span class="text-red-500">↑3%</span></div>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -288,8 +282,6 @@
                                 <div class="text-slate-500 text-sm">已回传作业</div>
                                 <div class="text-[24px] font-semibold text-slate-800">105 <span
                                         class="text-sm font-normal text-slate-500">项</span></div>
-                                <div class="text-xs mt-1 text-slate-400">较昨日 <span class="text-emerald-500">↑15%</span>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -720,10 +712,25 @@
                     </div>
                 </div>
 
-                <!-- 视频上传区域 -->
+                <!-- 作业摄像头选择 -->
                 <div class="mb-6">
                     <div class="flex items-center gap-2 mb-3">
                         <span class="w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center">2</span>
+                        <h3 class="font-medium text-slate-800">选择摄像头 <span class="text-danger text-sm">*</span></h3>
+                    </div>
+                    <select id="uploadCameraSelect" class="w-full border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-700 outline-none focus:border-primary bg-white">
+                        <option value="">请选择该作业关联的摄像头</option>
+                        <option value="CAM-NB-001">南帮边坡工作面全景摄像头（CAM-NB-001）</option>
+                        <option value="CAM-NB-002">南帮边坡爆破区固定摄像头（CAM-NB-002）</option>
+                        <option value="MBQJ-NB-01">南帮边坡移动布控球（MBQJ-NB-01）</option>
+                    </select>
+                    <p class="text-xs text-slate-400 mt-2"><i class="fa fa-info-circle mr-1"></i>请选择本次上传视频对应的作业摄像头</p>
+                </div>
+
+                <!-- 视频上传区域 -->
+                <div class="mb-6">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center">3</span>
                         <h3 class="font-medium text-slate-800">选择视频文件 <span class="text-danger text-sm">*</span></h3>
                     </div>
                     <div id="dropZone"
@@ -739,7 +746,7 @@
                 <div id="fileListWrap" class="mb-6 hidden">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-2">
-                            <span class="w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center">3</span>
+                            <span class="w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center">4</span>
                             <h3 class="font-medium text-slate-800">已选文件 <span id="fileCount" class="text-slate-400 text-sm font-normal">(0)</span></h3>
                         </div>
                         <button onclick="clearAllFiles()" class="text-sm text-slate-500 hover:text-danger">
@@ -800,6 +807,7 @@
 
         function resetUpload() {
             selectedFiles = [];
+            document.getElementById('uploadCameraSelect').value = '';
             document.getElementById('videoFileInput').value = '';
             document.getElementById('fileListWrap').classList.add('hidden');
             document.getElementById('fileList').innerHTML = '';
@@ -900,6 +908,11 @@
 
         // 提交上传
         function submitUpload() {
+            if (!document.getElementById('uploadCameraSelect').value) {
+                alert('请先选择摄像头');
+                document.getElementById('uploadCameraSelect').focus();
+                return;
+            }
             if (selectedFiles.length === 0) {
                 alert('请先选择视频文件');
                 return;
@@ -948,8 +961,24 @@
             tabJobManage.classList.remove('text-slate-500');
             alert('切换至【作业管理】列表');
         })
+
+        // 从作业列表进入实时监控，并定位到当前作业计划。
+        document.querySelectorAll('tbody a').forEach(link => {
+            const actionName = link.textContent.trim();
+            if (actionName !== '查看监控' && actionName !== '倒查') return;
+            link.addEventListener('click', event => {
+                event.preventDefault();
+                const row = link.closest('tr');
+                const jobName = row?.cells[2]?.textContent.trim() || '';
+                const targetPage = actionName === '查看监控' ? '实时监控.html' : '视频倒查按作业计划.html';
+                const params = new URLSearchParams({ job: jobName, from: '作业计划管理.html' });
+                if (actionName === '查看监控') params.set('tab', 'plan');
+                window.location.href = `${targetPage}?${params.toString()}`;
+            });
+        });
     </script>
     <script src="navigation.js?v=20260819-2"></script>
+<script src="org-panel-toggle.js?v=20260822-2"></script>
 </body>
 
 </html>

@@ -629,7 +629,7 @@
                 const recordNumber = Number(cellText(row, 1)) || 1;
                 const markerX = (28 + recordNumber * 9.37) % 82;
                 const markerY = (35 + recordNumber * 7.11) % 78;
-                document.getElementById('detailBasic').innerHTML = `<p>隐患单位：${cellText(row, 7)}</p><p>隐患整改人员：${cellText(row, 15)}</p><p>隐患来源：${cellText(row, 3)}</p><p class="flex items-center flex-wrap">隐患位置：${cellText(row, 6)}<a role="button" tabindex="0" data-view-gis data-gis-x="${markerX.toFixed(2)}" data-gis-y="${markerY.toFixed(2)}" class="ml-3 text-primary cursor-pointer hover:underline">已标注</a></p><p>隐患接收时间：${cellText(row, 2)}</p><p>检查人：${cellText(row, 10)}</p><p>检查单位：${cellText(row, 11)}</p><p>整改期限：2024-05-25</p>`;
+                document.getElementById('detailBasic').innerHTML = `<p>隐患单位：${cellText(row, 7)}</p><p>隐患整改人员：${cellText(row, 15)}</p><p>隐患来源：${cellText(row, 3)}</p><p class="flex items-center flex-wrap">隐患位置：${cellText(row, 6)}<button type="button" data-view-gis data-gis-x="${markerX.toFixed(2)}" data-gis-y="${markerY.toFixed(2)}" class="ml-3 border border-primary rounded px-2 py-1 text-primary hover:bg-blue-50">查看位置</button></p><p>隐患接收时间：${cellText(row, 2)}</p><p>检查人：${cellText(row, 10)}</p><p>检查单位：${cellText(row, 11)}</p><p>整改期限：2024-05-25</p>`;
                 document.getElementById('detailExtra').innerHTML = `<p>隐患描述：${cellText(row, 8) || '暂无描述'}</p><p>隐患分类：${cellText(row, 4)}</p><p>隐患等级：${cellText(row, 5)}</p><p>备注：无</p><p>隐患图片：</p><div class="w-32 h-24 rounded bg-slate-200 flex items-center justify-center text-textLight"><i class="fa fa-picture-o text-2xl"></i></div>`;
                 document.getElementById('recordRectifier').textContent = cellText(row, 15) === '-' ? '待指派' : cellText(row, 15);
                 document.getElementById('recordDescription').textContent = `隐患描述：${cellText(row, 8) || '暂无描述'}`;
@@ -707,5 +707,6 @@
             });
         })();
     </script>
+<script src="org-panel-toggle.js?v=20260822-2"></script>
 </body>
 </html>

@@ -476,6 +476,24 @@
     <div id="deleteConfirm" class="hidden fixed inset-0 z-[60] bg-black/35 flex items-center justify-center p-5"><div class="bg-white w-[420px] rounded-lg shadow-2xl"><div class="px-6 py-5 border-b border-tableBorder flex justify-between"><h3 class="font-semibold">删除确认</h3><button data-delete-cancel><i class="fa fa-times text-gray-500"></i></button></div><div class="p-6 text-sm text-gray-700"><p><i class="fa fa-exclamation-triangle text-orange-500 mr-2"></i>确定删除违章规则“<span id="deleteRuleName" class="font-medium text-gray-900"></span>”吗？</p><p class="text-gray-400 mt-3">删除后将无法恢复。</p></div><div class="px-6 py-4 border-t flex justify-end gap-3"><button data-delete-cancel class="border border-gray-300 rounded px-5 py-2">取消</button><button id="confirmDeleteButton" class="bg-red-500 text-white rounded px-5 py-2">确定删除</button></div></div></div>
     <script src="navigation.js?v=20260819-2"></script>
     <script>
+        const ruleNameInput = document.getElementById('ruleName');
+        const ruleNameSelect = document.createElement('select');
+        ruleNameSelect.id = 'ruleName';
+        ruleNameSelect.className = ruleNameInput.className;
+        ruleNameSelect.setAttribute('aria-label', '违章名称');
+        ruleNameSelect.innerHTML = `
+            <option value="">请从算法中选择</option>
+            <option value="安全帽识别">安全帽识别</option>
+            <option value="未佩戴安全帽识别">未佩戴安全帽识别</option>
+            <option value="反光衣识别">反光衣识别</option>
+            <option value="抽烟识别">抽烟识别</option>
+            <option value="离岗识别">离岗识别</option>
+            <option value="区域入侵识别">区域入侵识别</option>
+            <option value="越界闯入识别">越界闯入识别</option>
+            <option value="攀爬翻越识别">攀爬翻越识别</option>
+        `;
+        ruleNameInput.replaceWith(ruleNameSelect);
+
         const ruleBody = document.getElementById('ruleTableBody');
         const drawer = document.getElementById('ruleDrawer');
         const confirmModal = document.getElementById('deleteConfirm');

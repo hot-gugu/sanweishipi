@@ -332,7 +332,7 @@
                                     <td class="px-2 py-2.5"><span class="text-levelA font-medium">A类</span></td>
                                     <td class="px-2 py-2.5">采矿一分区东峪658皮带巷</td>
                                     <td class="px-2 py-2.5">采矿事业部采矿一分区</td>
-                                    <td class="px-2 py-2.5">张安全等3人</td>
+                                    <td class="px-2 py-2.5">张安全、李建国、王伟</td>
                                     <td class="px-2 py-2.5"><div class="w-8 h-8 bg-slate-300 rounded"></div></td>
                                     <td class="px-2 py-2.5">李强</td>
                                     <td class="px-2 py-2.5">2024-05-18 14:00</td>
@@ -407,7 +407,7 @@
                                     <td class="px-2 py-2.5">陈磊</td>
                                     <td class="px-2 py-2.5">2024-05-18 09:30</td>
                                     <td class="px-2 py-2.5">300</td>
-                                    <td class="px-2 py-2.5">-</td>
+                                    <td class="px-2 py-2.5">3</td>
                                     <td class="px-2 py-2.5"><span class="bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded text-xs">待处理</span></td>
                                     <td class="px-2 py-2.5">-</td>
                                     <td class="px-2 py-2.5">-</td>
@@ -461,7 +461,7 @@
             <!-- 待处理记录详情：按 AI 违章预警字段展示 -->
             <div id="pendingDetailDrawer" class="hidden flex-1 overflow-y-auto p-6">
                 <section class="mb-7">
-                    <h3 class="font-medium mb-5 border-l-4 border-primary pl-3">AI识别信息</h3>
+                    <h3 class="font-medium mb-5 border-l-4 border-primary pl-3">预警信息</h3>
                     <div class="grid grid-cols-[150px_1fr] gap-y-4 text-sm">
                         <div class="text-textSecondary">预警编号</div><div id="aiWarningNo"></div>
                         <div class="text-textSecondary">预警时间</div><div id="aiWarningTime"></div>
@@ -488,7 +488,7 @@
                     </div>
                 </section>
                 <section class="mb-7">
-                    <h3 class="font-medium mb-5 border-l-4 border-primary pl-3">基本信息</h3>
+                    <h3 class="font-medium mb-5 border-l-4 border-primary pl-3">作业信息</h3>
                     <div class="grid grid-cols-[150px_1fr] gap-y-4 text-sm">
                         <div class="text-textSecondary">作业类型</div><div>生产作业</div>
                         <div class="text-textSecondary">二级分类</div><div>现场安全管理</div>
@@ -701,7 +701,7 @@
                 setText('aiWorkContent', `${text(row, 6)}现场作业`);
                 const markerX = ((28 + Number(text(row, 1)) * 9.37) % 82).toFixed(2);
                 const markerY = ((35 + Number(text(row, 1)) * 7.11) % 78).toFixed(2);
-                document.getElementById('aiWorkArea').innerHTML = `${text(row, 6)}<a role="button" tabindex="0" data-view-gis data-gis-x="${markerX}" data-gis-y="${markerY}" class="ml-3 text-primary cursor-pointer hover:underline">已标注</a>`;
+                document.getElementById('aiWorkArea').innerHTML = `${text(row, 6)}<button type="button" data-view-gis data-gis-x="${markerX}" data-gis-y="${markerY}" class="ml-3 border border-primary rounded px-2 py-1 text-primary hover:bg-blue-50">查看位置</button>`;
                 setText('aiWorkDate', date);
                 setText('aiWorkUnit', text(row, 7));
                 setText('aiOrg', text(row, 7));
@@ -783,5 +783,6 @@
             });
         })();
     </script>
+<script src="org-panel-toggle.js?v=20260822-2"></script>
 </body>
 </html>

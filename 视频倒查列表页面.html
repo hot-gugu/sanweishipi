@@ -54,6 +54,25 @@
             .card-shadow {
                 box-shadow: 0 1px 2px rgba(0,0,0,0.06);
             }
+            .org-panel {
+                width: 44px;
+                transition: width .2s ease;
+            }
+            .org-panel.is-open {
+                width: 260px;
+            }
+            .org-panel .org-panel-content {
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity .15s ease;
+            }
+            .org-panel.is-open .org-panel-content {
+                opacity: 1;
+                visibility: visible;
+            }
+            .org-panel.is-open .org-panel-toggle i {
+                transform: rotate(180deg);
+            }
         }
     </style>
 </head>
@@ -138,6 +157,26 @@
 
     <!-- 主体内容区域 -->
     <main class="flex-1 overflow-hidden p-5 flex gap-5">
+        <!-- 默认收起的组织架构树 -->
+        <aside id="orgPanel" class="org-panel bg-white rounded-lg card-shadow flex-shrink-0 overflow-hidden relative" aria-expanded="false">
+            <button id="orgPanelToggle" type="button" class="org-panel-toggle absolute right-1 top-1/2 -translate-y-1/2 w-9 py-2 rounded border border-borderColor bg-white text-primary flex flex-col items-center justify-center gap-1 hover:bg-blue-50 z-10" aria-label="展开组织架构" title="展开组织架构">
+                <i class="fa fa-angle-right transition-transform"></i>
+                <span id="orgPanelToggleText" class="text-xs leading-tight" style="writing-mode: vertical-rl;">展开</span>
+            </button>
+            <div class="org-panel-content w-[260px] h-full overflow-y-auto p-5 pr-12">
+                <h3 class="font-semibold text-textMain mb-5">组织架构</h3>
+                <div class="font-medium text-primary mb-4 flex items-center gap-2">
+                    <i class="fa fa-building"></i><span>鞍钢矿业公司</span>
+                </div>
+                <div class="pl-6 flex flex-col gap-4 text-sm text-textSecondary">
+                    <button type="button" class="text-left hover:text-primary flex items-center gap-2"><i class="fa fa-folder text-primary"></i>齐大山铁矿</button>
+                    <button type="button" class="text-left hover:text-primary flex items-center gap-2"><i class="fa fa-folder text-primary"></i>弓长岭铁矿</button>
+                    <button type="button" class="text-left hover:text-primary flex items-center gap-2"><i class="fa fa-folder text-primary"></i>眼前山铁矿</button>
+                    <button type="button" class="text-left hover:text-primary flex items-center gap-2"><i class="fa fa-folder text-primary"></i>东鞍山分公司</button>
+                </div>
+            </div>
+        </aside>
+
         <!-- 左侧区域 -->
 
 
@@ -317,21 +356,9 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- 筛选区域 -->
             <div class="bg-white rounded-lg p-4 card-shadow mb-4 flex-shrink-0">
-                <div class="grid grid-cols-5 gap-4 mb-3">
+                <div class="grid grid-cols-3 gap-4 mb-3">
                     <div class="flex items-center gap-2">
                         <label class="text-sm text-textSecondary whitespace-nowrap">作业位置</label>
-                        <select class="flex-1 border border-borderColor rounded px-2 py-1.5 text-sm outline-none">
-                            <option>请选择</option>
-                        </select>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <label class="text-sm text-textSecondary whitespace-nowrap">作业单位</label>
-                        <select class="flex-1 border border-borderColor rounded px-2 py-1.5 text-sm outline-none">
-                            <option>请选择</option>
-                        </select>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <label class="text-sm text-textSecondary whitespace-nowrap">所属单位</label>
                         <select class="flex-1 border border-borderColor rounded px-2 py-1.5 text-sm outline-none">
                             <option>请选择</option>
                         </select>
@@ -354,7 +381,7 @@
                         <!-- <label class="text-sm text-textSecondary whitespace-nowrap">作业时间</label> -->
                         <!-- <input type="text" value="2025-05-19 ~ 2025-05-25" class="border border-borderColor rounded px-2 py-1.5 text-sm w-[220px] outline-none"> -->
                     </div>
-                    <input type="text" placeholder="请输入作业内容关键词" class="flex-1 border border-borderColor rounded px-2 py-1.5 text-sm outline-none">
+                    <input type="text" placeholder="请输入作业内容或作业单位关键词" class="flex-1 border border-borderColor rounded px-2 py-1.5 text-sm outline-none">
                     <button class="border border-borderColor px-4 py-1.5 rounded text-sm">展开 ∨</button>
                 </div>
             </div>
@@ -554,5 +581,20 @@
         </div>
     </main>
     <script src="navigation.js?v=20260819-2"></script>
+    <script>
+        (function () {
+            const panel = document.getElementById('orgPanel');
+            const toggle = document.getElementById('orgPanelToggle');
+            const toggleText = document.getElementById('orgPanelToggleText');
+            if (!panel || !toggle) return;
+            toggle.addEventListener('click', function () {
+                const open = panel.classList.toggle('is-open');
+                panel.setAttribute('aria-expanded', String(open));
+                toggle.setAttribute('aria-label', open ? '收起组织架构' : '展开组织架构');
+                toggle.setAttribute('title', open ? '收起组织架构' : '展开组织架构');
+                toggleText.textContent = open ? '收起' : '展开';
+            });
+        })();
+    </script>
 </body>
 </html>

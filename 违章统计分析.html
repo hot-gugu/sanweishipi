@@ -329,12 +329,6 @@
                     </div>
                 </div>
                 <div class="bg-darkCard rounded-lg p-3 border border-darkBorder card-glow">
-                    <div class="text-sm mb-2">违章地点分布(TOP10)</div>
-                    <div class="chart-wrap">
-                        <canvas id="chartPlace"></canvas>
-                    </div>
-                </div>
-                <div class="bg-darkCard rounded-lg p-3 border border-darkBorder card-glow">
                     <div class="text-sm mb-2">违章人员分布(TOP10)</div>
                     <div class="chart-wrap">
                         <canvas id="chartPerson"></canvas>
@@ -360,12 +354,6 @@
                             <canvas id="chartFalseAlarm"></canvas>
                         </div>
                         <div class="pie-legend-box" id="legendFalseAlarm"></div>
-                    </div>
-                </div>
-                <div class="bg-darkCard rounded-lg p-3 border border-darkBorder card-glow">
-                    <div class="text-sm mb-2">月度有效违章趋势</div>
-                    <div class="chart-wrap">
-                        <canvas id="chartValidTrend"></canvas>
                     </div>
                 </div>
             </div>
@@ -486,23 +474,6 @@
             }
         })
 
-        //8.地点TOP10
-        new Chart(document.getElementById("chartPlace"),{
-            type:"bar",indexAxis:"y",
-            data:{
-                labels:["破碎车间","主运输巷道","露天采场","选矿主厂房","机修车间","提升井口","排土场","泵房","皮带通廊","材料堆场"],
-                datasets:[{data:[342,286,264,212,168,134,106,92,76,66],backgroundColor:"#1690FF"}]
-            },
-            options:{
-                maintainAspectRatio:false,
-                plugins:{legend:{display:false}},
-                scales:{
-                    x:{grid:{color:"#21355E"},ticks:{color:"#8492B3"}},
-                    y:{grid:{color:"#21355E"},ticks:{color:"#8492B3"}}
-                }
-            }
-        })
-
         //9.人员TOP10
         new Chart(document.getElementById("chartPerson"),{
             type:"bar",indexAxis:"y",
@@ -540,22 +511,6 @@
         })
         buildLegend("legendFalseAlarm", falseAlarmLabels, colorList);
 
-        //12.有效违章趋势
-        new Chart(document.getElementById("chartValidTrend"),{
-            type:"line",
-            data:{
-                labels:["12月","1月","2月","3月","4月","5月"],
-                datasets:[{data:[132,164,186,242,286,314],tension:0.3,borderColor:"#00C48C"}]
-            },
-            options:{
-                maintainAspectRatio:false,
-                plugins:{legend:{display:false}},
-                scales:{
-                    x:{grid:{color:"#21355E"},ticks:{color:"#8492B3"}},
-                    y:{grid:{color:"#21355E"},ticks:{color:"#8492B3"}}
-                }
-            }
-        })
     </script>
     <script src="navigation.js?v=20260819-2"></script>
 </body>

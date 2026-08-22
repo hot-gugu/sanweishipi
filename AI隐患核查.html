@@ -186,7 +186,7 @@
                             </div>
                         </div>
                         <div>
-                            <label class="text-xs text-textSecondary block mb-1">违章名称</label>
+                    <label class="text-xs text-textSecondary block mb-1">违章名称</label>
                             <select class="w-full border border-borderLine rounded px-2 py-1.5 text-sm">
                                 <option>全部</option>
                             </select>
@@ -277,7 +277,7 @@
                                 <tr>
                                     <th class="px-3 py-3 text-left font-normal text-textSecondary">序号</th>
                                     <th class="px-3 py-3 text-left font-normal text-textSecondary">预警时间</th>
-                                    <th class="px-3 py-3 text-left font-normal text-textSecondary">违章名称</th>
+                                <th class="px-3 py-3 text-left font-normal text-textSecondary">违章名称</th>
                                     <th class="px-3 py-3 text-left font-normal text-textSecondary">作业位置</th>
                                     <th class="px-3 py-3 text-left font-normal text-textSecondary">摄像头</th>
                                     <th class="px-3 py-3 text-left font-normal text-textSecondary">作业内容</th>
@@ -669,7 +669,7 @@
                 const recordNumber = Number(row.cells[0].innerText.trim()) || 1;
                 const markerX = ((28 + recordNumber * 9.37) % 82).toFixed(2);
                 const markerY = ((35 + recordNumber * 7.11) % 78).toFixed(2);
-                document.getElementById('detailWorkArea').innerHTML = `${row.cells[3].innerText.trim()}<a role="button" tabindex="0" data-view-gis data-gis-x="${markerX}" data-gis-y="${markerY}" class="ml-3 text-primary cursor-pointer hover:underline">已标注</a>`;
+                document.getElementById('detailWorkArea').innerHTML = `${row.cells[3].innerText.trim()}<button type="button" data-view-gis data-gis-x="${markerX}" data-gis-y="${markerY}" class="ml-3 border border-primary rounded px-2 py-1 text-primary hover:bg-blue-50">查看位置</button>`;
                 const status = this.getAttribute('data-status');
                 const result = this.getAttribute('data-result');
                 if (status === 'done') {
@@ -710,6 +710,7 @@
         document.querySelectorAll('[data-gis-close]').forEach(button => button.addEventListener('click', () => gisModal.classList.add('hidden')));
     </script>
     <script src="navigation.js?v=20260819-2"></script>
+<script src="org-panel-toggle.js?v=20260822-2"></script>
 </body>
 
 </html>

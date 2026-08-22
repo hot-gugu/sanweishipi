@@ -106,7 +106,7 @@
                 <!-- 中间统计字段 -->
                 <div class="col-span-4 grid grid-cols-1 gap-y-2 text-sm border-l border-borderLine pl-5">
                     <div class="text-textSecondary">统计日期：<span class="text-textMain">2024-05-18</span></div>
-                    <div class="text-textSecondary">倒查时长：<span class="text-textMain">01:32:16</span></div>
+                    <div class="text-textSecondary">倒查时长：<span class="text-textMain">0天1时32分</span></div>
                     <div class="text-textSecondary">倒查总视频数：<span class="text-textMain">28 个</span></div>
                     <div class="text-textSecondary">参与人员数：<span class="text-textMain">18 人</span></div>
                 </div>
@@ -324,9 +324,9 @@
             violation: {
                 headers: ['序号','发生时间','预警来源','违章名称','违章等级','违章单位','所属单位','违章人员','违章照片','考核人','考核时间','考核金额(元)','记分','处理状态','处理人','处理时间','操作'],
                 rows: [
-                    ['1','2024-05-18 10:24:36','AI预警-视频识别','违章作业','A类','采矿一分区东峪658皮带巷','采矿事业部采矿一分区','张安全等3人','照片','李强','2024-05-18 14:00','1000','6','已处理','张安全','2024-05-18 14:05','详情'],
+                    ['1','2024-05-18 10:24:36','AI预警-视频识别','违章作业','A类','采矿一分区东峪658皮带巷','采矿事业部采矿一分区','张安全、李建国、王伟','照片','李强','2024-05-18 14:00','1000','6','已处理','张安全','2024-05-18 14:05','详情'],
                     ['2','2024-05-18 10:21:15','实时巡查上报','设备设施隐患','B类','机电动力部配电室','采矿事业部采矿二分区','王伟','照片','李强','2024-05-18 13:00','500','3','已处理','赵强','2024-05-18 13:10','详情'],
-                    ['3','2024-05-18 10:18:34','视频倒查上报','未佩戴防护用品','B类','采矿二分区19#回采工作面','采矿事业部采矿二分区','刘刚等2人','照片','赵强','2024-05-18 15:00','800','3','已处理','张安全','2024-05-18 15:10','详情']
+                    ['3','2024-05-18 10:18:34','视频倒查上报','未佩戴防护用品','B类','采矿二分区19#回采工作面','采矿事业部采矿二分区','刘刚、陈磊','照片','赵强','2024-05-18 15:00','800','3','已处理','张安全','2024-05-18 15:10','详情']
                 ]
             },
             hazard: {
@@ -386,7 +386,7 @@
             document.getElementById('hazardDrawerContent').classList.toggle('hidden', violation);
             if (violation) {
                 document.getElementById('violationAiInfo').innerHTML = detailLine('预警编号', `WZ20240518${String(rowIndex + 1).padStart(3,'0')}`) + detailLine('预警时间', row[1]) + detailLine('摄像头', `${row[5]}固定摄像头（固定）`) + detailLine('预警来源', row[2]) + detailLine('违章人员', row[7]) + detailLine('识别结果', row[3]) + detailLine('置信度', '92.6%') + detailLine('违章等级', row[4]) + detailLine('复核状态', '<span class="text-green-600">已复核</span>');
-                document.getElementById('violationBasicInfo').innerHTML = detailLine('作业类型', '生产作业') + detailLine('二级分类', '现场安全管理') + detailLine('作业内容', `${row[5]}现场作业`) + detailLine('作业区域/位置', `${row[5]}<a class="ml-3 text-primary cursor-pointer hover:underline">已标注</a>`) + detailLine('作业日期', row[1].split(' ')[0]) + detailLine('作业单位', row[6]) + detailLine('是否危险作业', '是') + detailLine('所属单位', row[6]);
+                document.getElementById('violationBasicInfo').innerHTML = detailLine('作业类型', '生产作业') + detailLine('二级分类', '现场安全管理') + detailLine('作业内容', `${row[5]}现场作业`) + detailLine('作业区域/位置', `${row[5]}<button type="button" class="ml-3 border border-primary rounded px-2 py-1 text-primary hover:bg-blue-50">查看位置</button>`) + detailLine('作业日期', row[1].split(' ')[0]) + detailLine('作业单位', row[6]) + detailLine('是否危险作业', '是') + detailLine('所属单位', row[6]);
                 const assessed = row[11] !== '-' && row[11] !== '0';
                 document.getElementById('violationAssessment').innerHTML = `<div><div class="text-textLight text-xs mb-1">考核结论</div><div class="text-green-600 font-medium">${assessed ? '考核金额' : '教育改正'}</div></div><div><div class="text-textLight text-xs mb-1">处理状态</div><div class="text-green-600 font-medium">${row[13]}</div></div><div><div class="text-textLight text-xs mb-1">考核金额</div><div>${assessed ? row[11] + ' 元' : '--'}</div></div><div><div class="text-textLight text-xs mb-1">记分</div><div>${assessed ? row[12] + ' 分' : '--'}</div></div><div class="col-span-2"><div class="text-textLight text-xs mb-1">考核说明</div><div>${assessed ? '已完成安全教育，并按规定进行罚款记分' : '已完成教育改正，不进行罚款及记分处理'}</div></div><div class="col-span-2"><div class="text-textLight text-xs mb-1">处理人/时间</div><div>${row[14]} / ${row[15]}</div></div><div class="col-span-2"><div class="text-textLight text-xs mb-2">整改凭证</div><div class="flex items-center gap-3"><div class="w-24 h-20 bg-white border border-green-200 rounded-lg flex flex-col items-center justify-center text-green-600"><i class="fa fa-image text-xl mb-1"></i><span class="text-xs">整改照片</span></div><div class="text-xs text-textSecondary leading-5">整改现场凭证<br><span class="text-green-600">已上传 1 张</span></div></div></div>`;
                 document.getElementById('violationReview').innerHTML = detailLine('复核结果', '<span class="text-red-500">确认违章</span>') + detailLine('复核人', row[9]) + detailLine('复核时间', row[10]) + detailLine('违章人员', row[7]) + detailLine('违章等级', `${row[4]}违章`) + detailLine('违章名称', row[3]) + detailLine('违章条款/依据', '《安全生产管理办法》第三章第十五条：作业人员进入作业现场必须按规定佩戴安全防护用品并遵守现场安全要求。') + detailLine('备注说明', '--');
@@ -395,7 +395,7 @@
                 const resultColor = row[10].includes('不是') || pending ? 'text-orange-600' : 'text-green-600';
                 document.getElementById('hazardVerifyInfo').innerHTML = `<p>核实结果：<span class="${resultColor}">${row[10]}</span></p><p>核实人：${pending ? '-' : row[8]}</p><p>核实人单位：${pending ? '-' : row[9]}</p><p>核实时间：${pending ? '-' : row[1]}</p>`;
                 const markerX = ((28 + (rowIndex + 1) * 9.37) % 82).toFixed(2), markerY = ((35 + (rowIndex + 1) * 7.11) % 78).toFixed(2);
-                document.getElementById('hazardBasicInfo').innerHTML = `<p>隐患单位：${row[6]}</p><p>隐患整改人员：${row[13] === '-' ? '待指派' : row[13]}</p><p>隐患来源：${row[2]}</p><p class="flex items-center flex-wrap">隐患位置：${row[5]}<a role="button" class="ml-3 text-primary cursor-pointer hover:underline" title="标注坐标 ${markerX}, ${markerY}">已标注</a></p><p>隐患接收时间：${row[1]}</p><p>检查人：${row[8]}</p><p>检查单位：${row[9]}</p><p>整改期限：2024-05-25</p>`;
+                document.getElementById('hazardBasicInfo').innerHTML = `<p>隐患单位：${row[6]}</p><p>隐患整改人员：${row[13] === '-' ? '待指派' : row[13]}</p><p>隐患来源：${row[2]}</p><p class="flex items-center flex-wrap">隐患位置：${row[5]}<button type="button" class="ml-3 border border-primary rounded px-2 py-1 text-primary hover:bg-blue-50" title="标注坐标 ${markerX}, ${markerY}">查看位置</button></p><p>隐患接收时间：${row[1]}</p><p>检查人：${row[8]}</p><p>检查单位：${row[9]}</p><p>整改期限：2024-05-25</p>`;
                 document.getElementById('hazardExtraInfo').innerHTML = `<p>隐患描述：${row[7] || '暂无描述'}</p><p>隐患分类：${row[3]}</p><p>隐患等级：${row[4]}</p><p>备注：无</p><p>隐患图片：</p><div class="w-32 h-24 rounded bg-slate-200 flex items-center justify-center text-textLight"><i class="fa fa-picture-o text-2xl"></i></div>`;
                 document.getElementById('hazardRecordRectifier').textContent = row[13] === '-' ? '待指派' : row[13];
                 document.getElementById('hazardRecordDescription').textContent = `隐患描述：${row[7] || '暂无描述'}`;

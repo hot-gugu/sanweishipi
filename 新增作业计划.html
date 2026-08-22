@@ -602,7 +602,7 @@
             const indoorLocation = [gisBuilding.value, gisFloor.value].filter(Boolean).join(' / ');
             const mapLocation = selectedPoint.area + '（' + selectedPoint.lng + ', ' + selectedPoint.lat + '）';
             workLocationInput.value = indoorLocation ? indoorLocation + ' / ' + mapLocation : mapLocation;
-            markLocationBtn.textContent = '已标注 >';
+            markLocationBtn.textContent = '查看位置';
             markLocationBtn.classList.remove('text-primary');
             markLocationBtn.classList.add('text-success');
             closeGisModal();
@@ -616,7 +616,7 @@
         var mode = urlParams.get('mode');
         // 编辑和详情模式已有历史点位，默认展示为已标注状态
         if (mode === 'edit' || mode === 'view') {
-            markLocationBtn.textContent = '已标注 >';
+            markLocationBtn.textContent = '查看位置';
             markLocationBtn.classList.remove('text-primary');
             markLocationBtn.classList.add('text-success');
         }

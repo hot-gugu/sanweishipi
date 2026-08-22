@@ -163,10 +163,15 @@
                 <aside class="w-[260px] bg-white border-r border-borderLine overflow-y-auto p-6 shrink-0"><h3 class="font-semibold text-slate-800 mb-5 text-base">组织架构</h3><div class="pl-1"><div class="font-medium text-primary mb-4 flex items-center gap-2"><i class="fa fa-building"></i>鞍钢矿业公司</div><div class="pl-6 flex flex-col gap-4 text-sm text-slate-600"><div><i class="fa fa-industry mr-2"></i>齐大山铁矿</div><div><i class="fa fa-industry mr-2"></i>弓长岭铁矿</div><div><i class="fa fa-industry mr-2"></i>眼前山铁矿</div><div><i class="fa fa-building mr-2"></i>东鞍山分公司</div></div></div></aside>
             <!-- 页面内容滚动区 -->
             <div class="flex-1 overflow-y-auto p-6 scrollbar-hide">
-                <div class="flex items-center gap-2 mb-4" id="quickDates"><span class="text-sm text-textMuted mr-1">快捷日期：</span><button class="quick-date bg-primary text-white">今日</button><button class="quick-date">昨日</button><button class="quick-date">近3日</button><button class="quick-date">近7天</button><button class="quick-date">近30天</button><button class="quick-date">近90天</button><button class="quick-date">自定义日期</button></div>
                 <!-- 筛选区域 -->
                 <div class="bg-cardBg rounded-lg p-5 card-shadow mb-5">
                     <div class="grid grid-cols-12 gap-4 items-center">
+                        <div class="col-span-5 flex items-center gap-3" id="quickDates">
+                            <label class="text-textMuted text-sm whitespace-nowrap">倒查日期：</label>
+                            <input type="date" value="2024-05-18" aria-label="倒查开始日期" class="bg-pageBg border border-borderLine rounded px-3 py-2 text-sm outline-none flex-1">
+                            <span class="text-textMuted">至</span>
+                            <input type="date" value="2024-05-18" aria-label="倒查结束日期" class="bg-pageBg border border-borderLine rounded px-3 py-2 text-sm outline-none flex-1">
+                        </div>
                         <div class="col-span-3 flex items-center gap-3">
                             <label class="text-textMuted text-sm whitespace-nowrap">领导名称：</label>
                             <div class="relative w-full">
@@ -174,23 +179,7 @@
                                 <i class="fa fa-search absolute right-3 top-2.5 text-textMuted"></i>
                             </div>
                         </div>
-                        <div class="col-span-2 flex items-center gap-3">
-                            <label class="text-textMuted text-sm whitespace-nowrap">所属部门：</label>
-                            <select class="bg-pageBg border border-borderLine rounded px-3 py-2 text-sm outline-none w-full">
-                                <option>全部</option>
-                            </select>
-                        </div>
-                        <div class="col-span-2 flex items-center gap-3">
-                            <label class="text-textMuted text-sm whitespace-nowrap">作业类型：</label>
-                            <select class="bg-pageBg border border-borderLine rounded px-3 py-2 text-sm outline-none w-full">
-                                <option>全部</option>
-                            </select>
-                        </div>
-                        <div class="col-span-3 flex items-center gap-3">
-                            <label class="text-textMuted text-sm whitespace-nowrap">关键字：</label>
-                            <input type="text" placeholder="请输入关键词" class="bg-pageBg border border-borderLine rounded px-3 py-2 text-sm flex-1 outline-none">
-                        </div>
-                        <div class="col-span-2"></div>
+                        <div class="col-span-4"></div>
                     </div>
                 </div>
 
@@ -202,7 +191,6 @@
                             <div>
                                 <div class="text-textMuted text-sm mb-1">倒查总视频数</div>
                                 <div class="text-[26px] font-semibold mt-1">56 <span class="text-base font-normal text-textMuted">个</span></div>
-                                <div class="text-emerald-600 text-xs mt-2"><i class="fa fa-arrow-up"></i> 环比 ↑12.5%</div>
                             </div>
                             <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
                                 <i class="fa fa-play-circle text-blue-500 text-xl"></i>
@@ -215,7 +203,6 @@
                             <div>
                                 <div class="text-textMuted text-sm mb-1">参与人员数</div>
                                 <div class="text-[26px] font-semibold mt-1">18 <span class="text-base font-normal text-textMuted">人</span></div>
-                                <div class="text-emerald-600 text-xs mt-2"><i class="fa fa-arrow-up"></i> 环比 ↑5.6%</div>
                             </div>
                             <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center">
                                 <i class="fa fa-users text-sky-500 text-xl"></i>
@@ -227,8 +214,7 @@
                         <div class="flex justify-between items-start">
                             <div>
                                 <div class="text-textMuted text-sm mb-1">倒查总时长</div>
-                                <div class="text-[26px] font-semibold mt-1">11:43:28</div>
-                                <div class="text-emerald-600 text-xs mt-2"><i class="fa fa-arrow-up"></i> 环比 ↑9.2%</div>
+                                <div class="text-[26px] font-semibold mt-1">0天11时43分</div>
                             </div>
                             <div class="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center">
                                 <i class="fa fa-clock-o text-cyan-500 text-xl"></i>
@@ -241,7 +227,6 @@
                             <div>
                                 <div class="text-textMuted text-sm mb-1">发现违章/隐患总数</div>
                                 <div class="text-[26px] font-semibold mt-1">38 <span class="text-base font-normal text-textMuted">条</span></div>
-                                <div class="text-emerald-600 text-xs mt-2"><i class="fa fa-arrow-up"></i> 环比 ↑18.4%</div>
                             </div>
                             <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
                                 <i class="fa fa-exclamation-triangle text-amber-500 text-xl"></i>
@@ -267,7 +252,6 @@
                             <div>
                                 <div class="text-textMuted text-sm mb-1">整改完成率</div>
                                 <div class="text-[26px] font-semibold mt-1">42.1% <span class="text-sm font-normal text-textMuted"></span></br><span style="font-size:12px;font-weight: normal;">待处置数:16/38</span></div>
-                                <div class="text-emerald-600 text-xs mt-2"><i class="fa fa-arrow-up"></i> 环比 ↑14.3%</div>
                             </div>
                             <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
                                 <i class="fa fa-check-square-o text-purple-500 text-xl"></i>
@@ -298,12 +282,12 @@
                             <tbody>
                                 <tr class="border-b border-borderLine item-hover">
                                     <td class="px-4 py-3">1</td>
-                                    <td class="px-4 py-3">2024-05-18</td>
+                                    <td class="px-4 py-3">2024-05-16 ~ 2024-05-18</td>
                                     <td class="px-4 py-3">张安全</td>
                                     <td class="px-4 py-3">三维无线矿山公司-安全管理部</td>
                                     <td class="px-4 py-3">按摄像头</td>
                                     <td class="px-4 py-3">28</td>
-                                    <td class="px-4 py-3">01:32:16</td>
+                                    <td class="px-4 py-3">0天1时32分</td>
                                     <td class="px-4 py-3 text-danger">3</td>
                                     <td class="px-4 py-3"><a href="领导履职详情.html" class="text-blue-600 hover:text-blue-700">查看详情</a></td>
                                 </tr>
@@ -314,7 +298,7 @@
                                     <td class="px-4 py-3">三维无线矿山公司-生产技术部</td>
                                     <td class="px-4 py-3">按作业计划</td>
                                     <td class="px-4 py-3">35</td>
-                                    <td class="px-4 py-3">02:15:42</td>
+                                    <td class="px-4 py-3">0天2时15分</td>
                                     <td class="px-4 py-3 text-danger">5</td>
                                     <td class="px-4 py-3"><a href="领导履职详情.html" class="text-blue-600 hover:text-blue-700">查看详情</a></td>
                                 </tr>
@@ -325,7 +309,7 @@
                                     <td class="px-4 py-3">三维无线矿山公司-机电管理部</td>
                                     <td class="px-4 py-3">按摄像头</td>
                                     <td class="px-4 py-3">12</td>
-                                    <td class="px-4 py-3">00:48:33</td>
+                                    <td class="px-4 py-3">0天0时48分</td>
                                     <td class="px-4 py-3 text-danger">2</td>
                                     <td class="px-4 py-3"><a href="领导履职详情.html" class="text-blue-600 hover:text-blue-700">查看详情</a></td>
                                 </tr>
@@ -336,7 +320,7 @@
                                     <td class="px-4 py-3">三维无线矿山公司-通风管理部</td>
                                     <td class="px-4 py-3">按作业计划</td>
                                     <td class="px-4 py-3">20</td>
-                                    <td class="px-4 py-3">01:05:21</td>
+                                    <td class="px-4 py-3">0天1时5分</td>
                                     <td class="px-4 py-3 text-danger">1</td>
                                     <td class="px-4 py-3"><a href="领导履职详情.html" class="text-blue-600 hover:text-blue-700">查看详情</a></td>
                                 </tr>
@@ -347,7 +331,7 @@
                                     <td class="px-4 py-3">三维无线矿山公司-安全管理部</td>
                                     <td class="px-4 py-3">按摄像头</td>
                                     <td class="px-4 py-3">26</td>
-                                    <td class="px-4 py-3">01:20:10</td>
+                                    <td class="px-4 py-3">0天1时20分</td>
                                     <td class="px-4 py-3 text-danger">4</td>
                                     <td class="px-4 py-3"><a href="领导履职详情.html" class="text-blue-600 hover:text-blue-700">查看详情</a></td>
                                 </tr>
@@ -358,7 +342,7 @@
                                     <td class="px-4 py-3">三维无线矿山公司-安全管理部</td>
                                     <td class="px-4 py-3">按作业计划</td>
                                     <td class="px-4 py-3">32</td>
-                                    <td class="px-4 py-3">02:02:18</td>
+                                    <td class="px-4 py-3">0天2时2分</td>
                                     <td class="px-4 py-3 text-danger">6</td>
                                     <td class="px-4 py-3"><a href="领导履职详情.html" class="text-blue-600 hover:text-blue-700">查看详情</a></td>
                                 </tr>
@@ -369,7 +353,7 @@
                                     <td class="px-4 py-3">三维无线矿山公司-生产技术部</td>
                                     <td class="px-4 py-3">按摄像头</td>
                                     <td class="px-4 py-3">18</td>
-                                    <td class="px-4 py-3">01:10:05</td>
+                                    <td class="px-4 py-3">0天1时10分</td>
                                     <td class="px-4 py-3 text-danger">2</td>
                                     <td class="px-4 py-3"><a href="领导履职详情.html" class="text-blue-600 hover:text-blue-700">查看详情</a></td>
                                 </tr>
@@ -380,7 +364,7 @@
                                     <td class="px-4 py-3">三维无线矿山公司-机电管理部</td>
                                     <td class="px-4 py-3">按作业计划</td>
                                     <td class="px-4 py-3">15</td>
-                                    <td class="px-4 py-3">00:55:30</td>
+                                    <td class="px-4 py-3">0天0时55分</td>
                                     <td class="px-4 py-3 text-danger">1</td>
                                     <td class="px-4 py-3"><a href="领导履职详情.html" class="text-blue-600 hover:text-blue-700">查看详情</a></td>
                                 </tr>
@@ -391,7 +375,7 @@
                                     <td class="px-4 py-3">三维无线矿山公司-通风管理部</td>
                                     <td class="px-4 py-3">按摄像头</td>
                                     <td class="px-4 py-3">10</td>
-                                    <td class="px-4 py-3">00:35:22</td>
+                                    <td class="px-4 py-3">0天0时35分</td>
                                     <td class="px-4 py-3">0</td>
                                     <td class="px-4 py-3"><a href="领导履职详情.html" class="text-blue-600 hover:text-blue-700">查看详情</a></td>
                                 </tr>
@@ -402,7 +386,7 @@
                                     <td class="px-4 py-3">三维无线矿山公司-安全管理部</td>
                                     <td class="px-4 py-3">按作业计划</td>
                                     <td class="px-4 py-3">22</td>
-                                    <td class="px-4 py-3">01:45:16</td>
+                                    <td class="px-4 py-3">0天1时45分</td>
                                     <td class="px-4 py-3 text-danger">3</td>
                                     <td class="px-4 py-3"><a href="领导履职详情.html" class="text-blue-600 hover:text-blue-700">查看详情</a></td>
                                 </tr>
@@ -451,5 +435,6 @@ document.addEventListener('click', function (event) {
     window.location.href = detailLink.href;
 }, true);
 </script>
+<script src="org-panel-toggle.js?v=20260822-2"></script>
 </body>
 </html>

@@ -186,7 +186,7 @@
               <div data-tab="all" class="tab-item px-4 py-2 text-sm cursor-pointer font-medium bg-primary text-white">全部样本</div>
               <div data-tab="positive" class="tab-item px-4 py-2 text-sm cursor-pointer bg-white text-textSub hover:bg-slate-50">正样本</div>
               <div data-tab="negative" class="tab-item px-4 py-2 text-sm cursor-pointer bg-white text-textSub hover:bg-slate-50">负样本</div>
-              <div data-tab="video" class="tab-item px-4 py-2 text-sm cursor-pointer bg-white text-textSub hover:bg-slate-50">视频样本库</div>
+              <div data-tab="video" class="tab-item px-4 py-2 text-sm cursor-pointer bg-white text-textSub hover:bg-slate-50">视频正样本库</div>
             </div>
           </div>
 
@@ -558,7 +558,7 @@
             </div>
           </div>
 
-          <!-- 视频样本库 -->
+          <!-- 视频正样本库 -->
           <div id="page-video" class="tab-page flex-col h-full overflow-y-auto scrollbar-thin">
             <div class="bg-white rounded-lg p-4 mb-4 border border-borderLine grid grid-cols-12 gap-4 items-end">
               <div class="col-span-3"><label class="text-xs text-textSub block mb-1.5">视频类型：</label><select class="w-full border border-borderLine rounded-md px-3 py-1.5 text-xs"><option>全部</option><option>违章视频</option><option>隐患视频</option></select></div>
@@ -586,7 +586,7 @@ const negativeGrid = document.querySelector('#page-negative .grid.grid-cols-4');
 const card = (title, scene, score, negative = true) => `<div class="bg-white border border-borderLine rounded-lg overflow-hidden shadow-sm"><div class="relative h-36 bg-slate-200 flex items-center justify-center"><i class="fa fa-image text-3xl text-textLight"></i><span class="absolute top-2 left-2 ${negative?'bg-negativeTag':'bg-positiveTag'} text-white text-[11px] px-2 py-0.5 rounded">${negative?'负样本':'正样本'}</span></div><div class="p-3"><h3 class="text-sm font-medium mb-2">${title}</h3><p class="text-xs text-textSub mb-2">${scene}</p><p class="text-xs">置信度：<span class="${negative?'text-red-500':'text-green-500'}">${score}</span></p><p class="text-xs text-textSub mt-2">来源：AI自动采集</p></div></div>`;
 if (negativeGrid) negativeGrid.innerHTML = card('正常佩戴安全帽','人员行为，安全防护','12%')+card('正常通行作业区','环境与设施，正常环境','8%')+card('规范系挂安全带','高处作业，安全防护','11%')+card('通道保持畅通','通道管理，正常环境','7%');
 
-// 视频样本库短视频卡片
+// 视频正样本库短视频卡片
 const videoGrid = document.getElementById('videoSampleGrid');
 const videoCard = (title,type,time) => `<div class="bg-white border border-borderLine rounded-lg overflow-hidden shadow-sm"><div class="relative h-36 bg-slate-800 flex items-center justify-center text-white"><span class="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center"><i class="fa fa-play ml-1"></i></span><span class="absolute top-2 left-2 ${type==='违章'?'bg-red-500':'bg-orange-500'} text-white text-[11px] px-2 py-0.5 rounded">${type}视频</span><span class="absolute bottom-2 right-2 bg-black/60 px-1.5 rounded text-xs">${time}</span></div><div class="p-3"><h3 class="text-sm font-medium">${title}</h3><p class="text-xs text-textSub mt-2">2024-05-18 · AI自动采集</p></div></div>`;
 if (videoGrid) videoGrid.innerHTML=videoCard('未佩戴安全帽作业','违章','00:18')+videoCard('皮带滚筒异常隐患','隐患','00:24')+videoCard('高处作业未系安全带','违章','00:15')+videoCard('现场烟雾隐患','隐患','00:21')+videoCard('人员进入危险区域','违章','00:12')+videoCard('通道堆物隐患','隐患','00:19')+videoCard('违规跨越设备','违章','00:16')+videoCard('配电柜未上锁','隐患','00:14');
@@ -613,5 +613,6 @@ tabItems.forEach(item=>{
 })
 </script>
 <script src="navigation.js?v=20260819-2"></script>
+<script src="org-panel-toggle.js?v=20260822-2"></script>
 </body>
 </html>

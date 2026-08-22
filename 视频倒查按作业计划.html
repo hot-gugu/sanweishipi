@@ -1079,6 +1079,7 @@
              <!-- <i>←</i> -->
             <div class="page-title"> ← 视频倒查管理</div>
             <div class="header-user-area">
+                <button id="returnToSource" type="button" style="display:none;height:34px;padding:0 14px;border:1px solid #d8dbe3;border-radius:6px;background:#fff;color:#334155;cursor:pointer;">← 返回</button>
                 <span>🔔</span>
                 <span>❓</span>
                 <div class="user-info">
@@ -1144,7 +1145,14 @@
             <div class="col-left-list">
                 <div class="list-search-bar">
                 </div>
-                <div class="job-list-title">作业计划列表（28）</div>
+                <div class="job-list-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                    <span>作业计划列表（28）</span>
+                    <button id="cancelJobFilters" type="button" style="padding:4px 9px;border:1px solid #2563eb;border-radius:5px;background:transparent;color:#60a5fa;font-size:12px;cursor:pointer;">取消过滤</button>
+                </div>
+                <div id="jobFilterBar" style="display:none;margin-bottom:12px;padding:10px;border:1px solid #2563eb;border-radius:6px;background:#eff6ff;">
+                    <div style="font-size:12px;color:#64748b;margin-bottom:8px;">当前仅展示：<span id="currentJobName" style="color:#0f172a;"></span></div>
+                    <button id="showAllJobs" type="button" style="width:100%;height:30px;border:0;border-radius:5px;background:#2563eb;color:#fff;cursor:pointer;">查看全部作业</button>
+                </div>
                 <div class="mb-3">
                         <select class="w-full mt-1 bg-darkBg border border-darkBorder rounded px-3 py-2 text-sm text-textMain outline-none focus:border-primary" style="display: block;height:34px;width: 220px; margin-bottom: 12px;background: #1f2937;border: 1px solid #374151;color: #e6edf7;border-radius: 4px;padding: 0 10px;">
                             <option>全部单位</option>
@@ -1256,15 +1264,8 @@
                         <div class="timeline-mark-red" style="left:78%;"></div>
                     </div>
                     <div class="timeline-control-row">
-                        <div class="time-quick-btn">24H</div>
-                        <div class="time-quick-btn">6H</div>
-                        <div class="time-quick-btn">2H</div>
-                        <div class="time-quick-btn">1H</div>
-                        <div class="time-quick-btn">30M</div>
-                        <div class="time-quick-btn">10M</div>
-                        <input class="time-input" value="10:24:36">
                         <button class="btn btn-default">违章/隐患标记</button>
-                        <button class="btn btn-primary" onclick="openDownloadDrawer()">下载视频</button>
+                        <button class="btn btn-primary" onclick="captureCurrentFrame(this)"><i class="fa fa-camera" style="margin-right:6px;"></i>拍照截图</button>
                     </div>
                 </div>
             </div>
@@ -1312,7 +1313,7 @@
 
                             <!-- 类型 -->
                             <div class="form-item">
-                                <label id="label-type"><span style="color:red">*</span>违章类型</label>
+                                <label id="label-type"><span style="color:red">*</span>违章名称</label>
                                 <select id="select-type" class="form-select">
                                     <optgroup id="opt-wz">
                                         <option value="safety">安全防护缺失</option>
@@ -1334,21 +1335,13 @@
                             <!-- 等级 -->
                             <div class="form-item">
                                 <label id="label-level"><span style="color:red">*</span>违章等级</label>
-                                <select id="select-level" class="form-select">
-                                    <optgroup id="level-wz">
-                                        <option>A类违章</option>
-                                        <option>B类违章</option>
-                                        <option>C类违章</option>
-                                        <option>D类违章</option>
-                                        <option>其他类违章</option>
-                                    </optgroup>
-                                    <optgroup id="level-yh" style="display:none;">
-                                        <option>重大隐患</option>
-                                        <option>较大隐患</option>
-                                        <option>一般隐患</option>
-                                        <option>轻微隐患</option>
-                                    </optgroup>
-                                </select>
+                                <input id="level-display" class="form-input" value="A类违章" readonly />
+                            </div>
+
+                            <!-- 违章记分 -->
+                            <div class="form-item" id="violation-score-wrap">
+                                <label>违章记分</label>
+                                <input class="form-input" value="12分" readonly style="font-weight:600;color:#ef4444;background:#fff7f7;" />
                             </div>
 
                             <!-- 单位 -->
@@ -1370,9 +1363,10 @@
                             <!-- 人员 -->
                             <div class="form-item">
                                 <label id="label-person"><span style="color:red">*</span>违章人员</label>
-                                <div>
+                                <div id="selected-person-list">
                                     <span class="tag-item">陶炳之(WX000864) <span class="tag-close">×</span></span>
                                     <span class="tag-item">魏伟(WX001258) <span class="tag-close">×</span></span>
+                                    <button type="button" onclick="addViolationPerson(this)" style="height:30px;padding:0 10px;border:1px dashed #2563eb;border-radius:5px;background:#eff6ff;color:#2563eb;cursor:pointer;">＋ 添加人员</button>
                                 </div>
                             </div>
 
@@ -1404,7 +1398,6 @@
                                 <img src="https://picsum.photos/id/1040/92/70" />
                             </div>
                             <div class="violation-right-area">
-                                <div class="btn-tag-mark">我标记</div>
                                 <div class="violation-field-row">
                                     <span class="violation-field-label">标注人姓名：</span>
                                     <span class="violation-field-value">张安全员</span>
@@ -1430,16 +1423,11 @@
                                     <span class="violation-field-value">采矿一厂</span>
                                 </div>
                                 <div class="violation-field-row">
-                                    <span class="violation-field-label">复核状态：</span>
-                                    <span class="violation-field-value" style="color:#10b981;">已复核</span>
-                                    <span style="margin:0 6px;color:#7887a0;">|</span>
-                                    <span class="violation-field-label">复核结果：</span>
-                                    <span class="violation-field-value" style="color:#ef4444;">确认违章</span>
+                                    <span class="violation-field-label">处理状态：</span>
+                                    <span class="violation-field-value" style="color:#10b981;">已处理</span>
                                 </div>
                                 <div class="violation-action-row">
                                     <span class="action-btn-detail" onclick="openDetail('wz', 1)">详情</span>
-                                    <!-- <span class="action-btn-edit" onclick="openEdit('wz', 1)">编辑</span>
-                                    <span class="action-btn-delete" onclick="this.closest('.violation-item').remove()">删除</span> -->
                                 </div>
                             </div>
                         </div>
@@ -1449,7 +1437,6 @@
                                 <img src="https://picsum.photos/id/1041/92/70" />
                             </div>
                             <div class="violation-right-area">
-                                <div class="btn-tag-mark">我标记</div>
                                 <div class="violation-field-row">
                                     <span class="violation-field-label">标注人姓名：</span>
                                     <span class="violation-field-value">李安全员</span>
@@ -1475,12 +1462,11 @@
                                     <span class="violation-field-value">运输车间</span>
                                 </div>
                                 <div class="violation-field-row">
-                                    <span class="violation-field-label">复核状态：</span>
-                                    <span class="violation-field-value" style="color:#f59e0b;">待复核</span>
+                                    <span class="violation-field-label">处理状态：</span>
+                                    <span class="violation-field-value" style="color:#f59e0b;">待处理</span>
                                 </div>
                                 <div class="violation-action-row">
                                     <span class="action-btn-detail" onclick="openDetail('wz', 2)">详情</span>
-                                    <span class="action-btn-edit" onclick="openEdit('wz', 2)">编辑</span>
                                     <span class="action-btn-delete" onclick="this.closest('.violation-item').remove()">删除</span>
                                 </div>
                             </div>
@@ -1521,8 +1507,7 @@
                                 </div>
                                 <div class="violation-action-row">
                                     <span class="action-btn-detail" onclick="openDetail('yh', 3)">详情</span>
-                                    <!-- <span class="action-btn-edit" onclick="openEdit('yh', 3)">编辑</span>
-                                    <span class="action-btn-delete" onclick="this.closest('.violation-item').remove()">删除</span> -->
+                                    <span class="action-btn-delete" onclick="this.closest('.violation-item').remove()">删除</span>
                                 </div>
                             </div>
                         </div>
@@ -1670,6 +1655,59 @@
             }
         })
 
+        function initializeJobFilter() {
+            const params = new URLSearchParams(window.location.search);
+            const jobName = params.get('job');
+            const fromPage = params.get('from');
+            const returnButton = document.getElementById('returnToSource');
+            const filterBar = document.getElementById('jobFilterBar');
+            const normalizeName = value => value.replace(/作业计划/g, '作业').replace(/计划/g, '').replace(/矿段/g, '段').replace(/[-—_]\d+$/g, '').replace(/\s+/g, '');
+
+            if (fromPage) {
+                returnButton.style.display = '';
+                returnButton.addEventListener('click', () => { window.location.href = fromPage; });
+            }
+            if (!jobName) return;
+
+            document.getElementById('currentJobName').textContent = jobName;
+            filterBar.style.display = '';
+            let matchedItem = null;
+            jobItems.forEach(item => {
+                const title = item.querySelector('h5');
+                title.dataset.originalTitle = title.textContent;
+                if (!matchedItem && normalizeName(title.textContent) === normalizeName(jobName)) matchedItem = item;
+            });
+            if (!matchedItem && jobItems.length) {
+                matchedItem = jobItems[0];
+                matchedItem.querySelector('h5').textContent = jobName;
+            }
+            jobItems.forEach(item => {
+                item.style.display = item === matchedItem ? '' : 'none';
+                item.classList.toggle('active', item === matchedItem);
+            });
+
+            document.getElementById('showAllJobs').addEventListener('click', cancelAllJobFilters);
+        }
+
+        initializeJobFilter();
+
+        function cancelAllJobFilters() {
+            document.querySelectorAll('.filter-container select, .col-left-list select').forEach(select => {
+                select.selectedIndex = 0;
+            });
+            document.querySelectorAll('.filter-container input').forEach(input => {
+                input.value = '';
+            });
+            jobItems.forEach(item => {
+                item.style.display = '';
+                const title = item.querySelector('h5');
+                if (title.dataset.originalTitle) title.textContent = title.dataset.originalTitle;
+            });
+            document.getElementById('jobFilterBar').style.display = 'none';
+        }
+
+        document.getElementById('cancelJobFilters').addEventListener('click', cancelAllJobFilters);
+
         //右侧tab切换逻辑
         const rightTabs = document.querySelectorAll('.event-tab-item');
         const tabPanels = document.querySelectorAll('.tab-panel');
@@ -1691,8 +1729,8 @@
             var descWrap = document.getElementById('desc-wrap');
             var optWz = document.getElementById('opt-wz');
             var optYh = document.getElementById('opt-yh');
-            var levelWz = document.getElementById('level-wz');
-            var levelYh = document.getElementById('level-yh');
+            var levelDisplay = document.getElementById('level-display');
+            var scoreWrap = document.getElementById('violation-score-wrap');
             var labelType = document.getElementById('label-type');
             var labelLevel = document.getElementById('label-level');
             var labelUnit = document.getElementById('label-unit');
@@ -1705,11 +1743,11 @@
             descWrap.style.display = isYh ? '' : 'none';
             optWz.style.display = isYh ? 'none' : '';
             optYh.style.display = isYh ? '' : 'none';
-            levelWz.style.display = isYh ? 'none' : '';
-            levelYh.style.display = isYh ? '' : 'none';
+            levelDisplay.value = isYh ? '一般隐患' : 'A类违章';
+            scoreWrap.style.display = isYh ? 'none' : '';
 
             var prefix = isYh ? '隐患' : '违章';
-            labelType.innerHTML = '<span style="color:red">*</span>' + (isYh ? '隐患分类' : '违章类型');
+            labelType.innerHTML = '<span style="color:red">*</span>' + (isYh ? '隐患分类' : '违章名称');
             labelLevel.innerHTML = '<span style="color:red">*</span>' + prefix + '等级';
             labelUnit.innerHTML = '<span style="color:red">*</span>' + prefix + '单位';
             labelRule.innerText = prefix + '条款/依据';
@@ -1717,22 +1755,21 @@
             labelTime.innerHTML = '<span style="color:red">*</span>' + (isYh ? '隐患排查时间' : '发现时间');
             labelLocation.innerHTML = '<span style="color:red">*</span>' + (isYh ? '隐患位置' : '作业位置');
 
-            // 隐患等级默认选中"一般隐患"
-            if (isYh) {
-                var levelSel = document.getElementById('select-level');
-                for (var i = 0; i < levelYh.options.length; i++) {
-                    if (levelYh.options[i].text === '一般隐患') {
-                        levelYh.options[i].selected = true;
-                        break;
-                    }
-                }
-            }
-
             if (!isYh) {
                 textareaRule.value = '《矿山安全管理考核细则》第12条：井下作业人员未按规定佩戴安全防护用品，属于一般性违章，按对应条款进行考核处理。';
             } else {
                 textareaRule.value = '《矿山安全隐患排查治理管理制度》第8条：作业现场存在设备设施或环境安全隐患，需限期整改并落实防范措施。';
             }
+        }
+
+        function addViolationPerson(button) {
+            const list = document.getElementById('selected-person-list');
+            if (list.querySelector('[data-added-person]')) return;
+            const person = document.createElement('span');
+            person.className = 'tag-item';
+            person.dataset.addedPerson = 'true';
+            person.innerHTML = '王强(WX003126) <span class="tag-close" onclick="this.parentElement.remove()">×</span>';
+            list.insertBefore(person, button);
         }
 
         // ===== 数据源 =====
@@ -1762,14 +1799,14 @@
                 html += '<div class="detail-field"><div class="detail-field-label">隐患分类</div><div class="detail-field-value">设备设施隐患</div></div>';
             } else {
                 html += '<div class="detail-field"><div class="detail-field-label">违章内容</div><div class="detail-field-value">' + d.content + '</div></div>';
-                html += '<div class="detail-field"><div class="detail-field-label">违章类型</div><div class="detail-field-value">安全防护缺失</div></div>';
+                html += '<div class="detail-field"><div class="detail-field-label">违章名称</div><div class="detail-field-value">安全防护缺失</div></div>';
             }
             html += '<div class="detail-field"><div class="detail-field-label">' + prefix + '等级</div><div class="detail-field-value">' + d.level + '</div></div>';
             html += '<div class="detail-field"><div class="detail-field-label">' + prefix + '单位</div><div class="detail-field-value">' + d.unit + '</div></div>';
             html += '<div class="detail-field"><div class="detail-field-label">' + prefix + '条款/依据</div><div class="detail-field-value">' + d.rule + '</div></div>';
             html += '<div class="detail-field"><div class="detail-field-label">' + (isYh ? '隐患整改人' : '违章人员') + '</div><div class="detail-field-value">' + d.person + '</div></div>';
             html += '<div class="detail-field"><div class="detail-field-label">' + (isYh ? '隐患排查时间' : '发现时间') + '</div><div class="detail-field-value">' + d.time + '</div></div>';
-            html += '<div class="detail-field"><div class="detail-field-label">' + (isYh ? '隐患位置' : '作业位置') + '</div><div class="detail-field-value" style="display:flex;align-items:center;gap:8px;">' + d.location + '<span onclick="openGisMap()" style="color:#10b981;font-size:13px;cursor:pointer;white-space:nowrap;">已标注&gt;</span></div></div>';
+            html += '<div class="detail-field"><div class="detail-field-label">' + (isYh ? '隐患位置' : '作业位置') + '</div><div class="detail-field-value" style="display:flex;align-items:center;gap:8px;">' + d.location + '<button type="button" onclick="openGisMap()" style="border:1px solid #2563eb;border-radius:4px;padding:3px 9px;background:transparent;color:#2563eb;font-size:13px;cursor:pointer;white-space:nowrap;">查看位置</button></div></div>';
             html += '<div class="detail-field"><div class="detail-field-label">状态</div><div class="detail-field-value" style="color:' + (d.reviewStatus === '已复核' ? '#10b981' : '#f59e0b') + ';">' + d.reviewStatus + '</div></div>';
             if (d.reviewResult) {
                 html += '<div class="detail-field"><div class="detail-field-label">复核结果</div><div class="detail-field-value" style="color:' + (d.reviewResult === '确认违章' ? '#ef4444' : '#6b7280') + ';">' + d.reviewResult + '</div></div>';
@@ -1806,7 +1843,7 @@
                 html += '<div class="form-item"><label><span style="color:red">*</span>隐患描述</label><textarea rows="2" class="form-input" style="height:auto;padding:8px 12px;resize:none;">' + d.content + '</textarea></div>';
             }
             // 类型
-            html += '<div class="form-item"><label><span style="color:red">*</span>' + (isYh ? '隐患分类' : '违章类型') + '</label><select class="form-select">';
+            html += '<div class="form-item"><label><span style="color:red">*</span>' + (isYh ? '隐患分类' : '违章名称') + '</label><select class="form-select">';
             if (isYh) {
                 html += '<option>设备设施隐患</option><option>作业环境隐患</option><option>消防通道隐患</option><option>电气安全隐患</option><option>其他隐患</option>';
             } else {
@@ -1830,7 +1867,7 @@
             // 时间
             html += '<div class="form-item"><label><span style="color:red">*</span>' + (isYh ? '隐患排查时间' : '发现时间') + '</label><input class="form-input" type="datetime-local" /></div>';
             // 地点
-            html += '<div class="form-item"><label><span style="color:red">*</span>' + (isYh ? '隐患位置' : '作业位置') + '</label><div style="position:relative;"><input class="form-input" value="' + d.location + '" style="padding-right:80px;" /><span onclick="openGisMap()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);color:#10b981;font-size:13px;cursor:pointer;white-space:nowrap;user-select:none;">已标注&gt;</span></div></div>';
+            html += '<div class="form-item"><label><span style="color:red">*</span>' + (isYh ? '隐患位置' : '作业位置') + '</label><div style="display:flex;align-items:center;gap:8px;"><input class="form-input" value="' + d.location + '" /><button type="button" onclick="openGisMap()" style="flex:none;border:1px solid #2563eb;border-radius:4px;padding:7px 10px;background:transparent;color:#2563eb;font-size:13px;cursor:pointer;white-space:nowrap;">查看位置</button></div></div>';
             html += '</div>';
 
             document.getElementById('edit-body').innerHTML = html;
@@ -1914,6 +1951,16 @@
         }
 
         // 同一作业关联多台摄像头时，切换当前查看的视频
+        function captureCurrentFrame(button) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fa fa-check" style="margin-right:6px;"></i>截图成功';
+            button.disabled = true;
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1500);
+        }
+
         document.querySelectorAll('.camera-switch-item').forEach(function (item) {
             item.addEventListener('click', function () {
                 document.querySelectorAll('.camera-switch-item').forEach(function (camera) {

@@ -48,6 +48,24 @@
             }
         }
         body{overflow:hidden;}
+        .mark-panel-dark { background:#08111f !important; }
+        .mark-panel-dark .mark-tabs { border-color:#24334d !important; }
+        .mark-panel-dark .mark-scroll { padding:0 18px 18px; }
+        .mark-panel-dark #tab1,
+        .mark-panel-dark #tab2 { color:#9aaaca; }
+        .mark-panel-dark #tab2.tab-active { color:#fff; }
+        .mark-list-item { display:grid;grid-template-columns:92px minmax(0,1fr);gap:14px;padding:20px 0;border-bottom:1px solid #263652; }
+        .mark-list-item img { width:92px;height:78px;border-radius:5px;object-fit:cover; }
+        .mark-list-info { min-width:0;font-size:13px;line-height:1.65;color:#fff; }
+        .mark-list-info .label { color:#7892bd; }
+        .mark-actions { display:flex;gap:12px;margin-top:8px; }
+        .mark-action { padding:2px 12px;border:1px solid #2677ff;border-radius:4px;color:#48a0ff;cursor:pointer; }
+        .mark-action.danger { border-color:#ef4444;color:#ef4444; }
+        .mark-pagination { display:flex;align-items:center;justify-content:center;gap:10px;padding:28px 0 8px;color:#fff; }
+        .mark-page { width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:5px;cursor:pointer; }
+        .mark-page.active { background:#2677ff; }
+        .person-chip { display:inline-flex;align-items:center;gap:6px;background:#eaf2ff;color:#2677ff;padding:7px 10px;border-radius:6px;font-size:13px; }
+        .person-add { border:1px dashed #2677ff;color:#2677ff;padding:6px 10px;border-radius:6px;font-size:13px;cursor:pointer;background:#fff; }
     </style>
 </head>
 <body class="font-inter bg-lightBg text-textMain h-screen flex">
@@ -106,8 +124,11 @@
                                 <button class="flex items-center gap-1 hover:text-primary text-sm">
                                     <i class="fa fa-volume-up"></i> 音量
                                 </button>
-                                <button class="flex items-center gap-1 hover:text-dangerRed text-sm" onclick="switchTab(1)">
+                                <button class="flex items-center gap-1.5 px-3 py-1.5 rounded border border-primary bg-primary text-white hover:bg-blue-600 text-sm transition-colors" onclick="switchTab(1)">
                                     <i class="fa fa-hand-paper-o"></i> 标注违章/隐患
+                                </button>
+                                <button class="flex items-center gap-1.5 px-3 py-1.5 rounded border border-primary text-primary bg-white hover:bg-blue-50 text-sm transition-colors" onclick="captureSnapshot(this)">
+                                    <i class="fa fa-camera"></i> 拍照截图
                                 </button>
                             </div>
                             <div class="flex items-center gap-5">
@@ -121,29 +142,29 @@
             </div>
 
             <!-- 右侧表单区域 -->
-            <div class="w-[360px] bg-cardBg rounded-lg flex flex-col flex-shrink-0">
+            <div id="right-panel" class="w-[360px] bg-cardBg rounded-lg flex flex-col flex-shrink-0">
                 <!-- 顶部Tab切换 -->
-                <div class="flex border-b border-borderGray">
+                <div class="mark-tabs flex border-b border-borderGray">
                     <div id="tab1" onclick="switchTab(1)" class="flex-1 text-center py-3 text-sm cursor-pointer tab-active">违章/隐患查处</div>
                     <div id="tab2" onclick="switchTab(2)" class="flex-1 text-center py-3 text-sm text-textGray">我标注的</div>
                 </div>
                 <!-- 表单滚动容器 -->
-                <div class="p-5 flex-1 overflow-y-auto form-scrollbar">
+                <div class="mark-scroll p-5 flex-1 overflow-y-auto form-scrollbar">
                     <!-- Tab1 违章/隐患查处表单 -->
                     <div id="form-tab1" class="space-y-3">
                         <!-- 1、违章/隐患照片 -->
                         <div>
                             <label class="block text-sm font-medium mb-1.5"><span class='text-dangerRed'>*</span>违章/隐患照片</label>
                             <div class="flex gap-2">
-                                <div class="w-[70px] h-[52px] rounded overflow-hidden relative">
+                                <div class="w-[92px] h-[80px] rounded overflow-hidden relative">
                                     <img src="https://picsum.photos/id/1011/80/60" class="w-full h-full object-cover">
                                     <i class="fa fa-times absolute top-1 right-1 bg-black/60 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs cursor-pointer"></i>
                                 </div>
-                                <div class="w-[70px] h-[52px] rounded overflow-hidden relative">
+                                <div class="w-[92px] h-[80px] rounded overflow-hidden relative">
                                     <img src="https://picsum.photos/id/1012/80/60" class="w-full h-full object-cover">
                                     <i class="fa fa-times absolute top-1 right-1 bg-black/60 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs cursor-pointer"></i>
                                 </div>
-                                <div class="w-[70px] h-[52px] border border-dashed border-borderGray rounded flex items-center justify-center text-textGray cursor-pointer">
+                                <div class="w-[92px] h-[80px] border border-dashed border-borderGray rounded flex items-center justify-center text-textGray cursor-pointer">
                                     <i class="fa fa-plus"></i>
                                 </div>
                             </div>
@@ -194,7 +215,7 @@
                         <!-- 等级 -->
                         <div>
                             <label id="label-level" class="block text-sm font-medium mb-1.5"><span class='text-dangerRed'>*</span>违章等级</label>
-                            <select id="select-level" class="w-full border border-borderGray rounded px-3 py-1.5 text-sm bg-white outline-none">
+                            <select id="select-level" class="appearance-none w-full border border-borderGray rounded px-3 py-2 text-sm bg-white outline-none pointer-events-none">
                                 <optgroup id="level-wz">
                                     <option>A类违章</option>
                                     <option>B类违章</option>
@@ -209,6 +230,12 @@
                                     <option>轻微隐患</option>
                                 </optgroup>
                             </select>
+                        </div>
+
+                        <!-- 违章记分 -->
+                        <div id="score-wrap">
+                            <label id="label-score" class="block text-sm font-medium mb-1.5">违章记分</label>
+                            <div id="violation-score" class="w-full border border-red-200 bg-red-50 rounded px-3 py-2 text-dangerRed font-semibold">12分</div>
                         </div>
 
                         <!-- 单位 -->
@@ -230,14 +257,16 @@
                         <!-- 人员 -->
                         <div>
                             <label id="label-person" class="block text-sm font-medium mb-1.5"><span class='text-dangerRed'>*</span>违章人员</label>
-                            <div class="border border-borderGray rounded px-2 py-1.5 flex flex-wrap gap-2 min-h-[36px]">
-                                <span class="bg-blue-50 text-primary px-2 py-0.5 rounded flex items-center gap-1 text-sm">
+                            <div id="person-list" class="flex flex-wrap items-center gap-2 min-h-[36px]">
+                                <span class="person-chip">
                                     陶炳之(WX000864)
-                                    <i class="fa fa-times cursor-pointer text-xs"></i>
+                                    <i class="fa fa-times cursor-pointer text-xs" onclick="removePerson(this)"></i>
                                 </span>
-                                <span class="bg-blue-50 text-primary px-2 py-0.5 rounded flex items-center gap-1 text-sm">
+                                <span class="person-chip">
                                     魏伟(WX001258)
+                                    <i class="fa fa-times cursor-pointer text-xs" onclick="removePerson(this)"></i>
                                 </span>
+                                <button type="button" id="add-person-button" class="person-add" onclick="addPerson()"><i class="fa fa-plus mr-1"></i>添加人员</button>
                             </div>
                         </div>
 
@@ -263,8 +292,60 @@
                         </div>
                     </div>
 
-                    <!-- Tab2 我标注的（与视频倒查按作业计划一致） -->
+                    <!-- Tab2 我标注的 -->
                     <div id="form-tab2" class="hidden">
+                        <article class="mark-list-item">
+                            <img src="https://picsum.photos/id/1040/184/156" alt="违章现场">
+                            <div class="mark-list-info">
+                                <div><span class="label">标注人姓名：</span>张安全员</div>
+                                <div><span class="label">标注人单位名称：</span>安全监察部</div>
+                                <div><span class="label">违章内容：</span>未佩戴安全帽</div>
+                                <div><span class="label">违章时间：</span>2026-08-05 14:32:16</div>
+                                <div><span class="label">单据类型：</span>违章</div>
+                                <div><span class="label">违章单位：</span>采矿一厂</div>
+                                <div><span class="label">处理状态：</span><span class="text-successGreen">已处理</span></div>
+                                <div class="mark-actions"><button class="mark-action" onclick="openDetail('wz', 1)">详情</button></div>
+                            </div>
+                        </article>
+                        <article class="mark-list-item">
+                            <img src="https://picsum.photos/id/1041/184/156" alt="违章现场">
+                            <div class="mark-list-info">
+                                <div><span class="label">标注人姓名：</span>李安全员</div>
+                                <div><span class="label">标注人单位名称：</span>安全监察部</div>
+                                <div><span class="label">违章内容：</span>未佩戴安全带</div>
+                                <div><span class="label">违章时间：</span>2026-08-05 14:28:42</div>
+                                <div><span class="label">单据类型：</span>违章</div>
+                                <div><span class="label">违章单位：</span>运输车间</div>
+                                <div><span class="label">处理状态：</span><span class="text-warningYellow">待处理</span></div>
+                                <div class="mark-actions">
+                                    <button class="mark-action" onclick="openDetail('wz', 2)">详情</button>
+                                    <button class="mark-action danger" onclick="deleteMark(this)">删除</button>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="mark-list-item">
+                            <img src="https://picsum.photos/id/1042/184/156" alt="隐患现场">
+                            <div class="mark-list-info">
+                                <div><span class="label">标注人姓名：</span>王安全员</div>
+                                <div><span class="label">标注人单位名称：</span>安全监察部</div>
+                                <div><span class="label">隐患描述：</span>跨越皮带输送机</div>
+                                <div><span class="label">隐患排查时间：</span>2026-08-05 14:24:07</div>
+                                <div><span class="label">单据类型：</span>隐患</div>
+                                <div><span class="label">隐患单位：</span>采矿二厂</div>
+                                <div><span class="label">整改状态：</span><span class="text-warningYellow">待核实</span></div>
+                                <div class="mark-actions">
+                                    <button class="mark-action" onclick="openDetail('yh', 3)">详情</button>
+                                    <button class="mark-action danger" onclick="deleteMark(this)">删除</button>
+                                </div>
+                            </div>
+                        </article>
+                        <nav class="mark-pagination" aria-label="标注记录分页">
+                            <button class="mark-page">&lt;</button><button class="mark-page active">1</button><button class="mark-page">2</button><button class="mark-page">3</button><button class="mark-page">4</button><span class="mark-page">...</span><button class="mark-page">&gt;</button>
+                        </nav>
+                    </div>
+
+                    <!-- 旧版列表保留为逻辑参考，不再展示 -->
+                    <div id="legacy-form-tab2" class="hidden" aria-hidden="true">
                         <!-- 列表项1：违章-已复核 -->
                         <div class="violation-item" style="padding:12px 0;border-bottom:1px solid #e5e7eb;display:grid;grid-template-columns:92px 1fr;gap:12px;">
                             <div style="width:92px;height:70px;border-radius:4px;overflow:hidden;">
@@ -456,13 +537,27 @@
     </div>
 
     <script>
+        function captureSnapshot(button) {
+            const original = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<i class="fa fa-check"></i> 截图成功';
+            button.classList.add('border-successGreen', 'text-successGreen');
+            setTimeout(function() {
+                button.innerHTML = original;
+                button.disabled = false;
+                button.classList.remove('border-successGreen', 'text-successGreen');
+            }, 1600);
+        }
+
         // Tab切换
         function switchTab(num) {
             const tab1 = document.getElementById('tab1');
             const tab2 = document.getElementById('tab2');
             const form1 = document.getElementById('form-tab1');
             const form2 = document.getElementById('form-tab2');
+            const panel = document.getElementById('right-panel');
             if(num === 1) {
+                panel.classList.remove('mark-panel-dark');
                 tab1.classList.add('tab-active');
                 tab1.classList.remove('text-textGray');
                 tab2.classList.remove('tab-active');
@@ -470,6 +565,7 @@
                 form1.classList.remove('hidden');
                 form2.classList.add('hidden');
             } else {
+                panel.classList.add('mark-panel-dark');
                 tab2.classList.add('tab-active');
                 tab2.classList.remove('text-textGray');
                 tab1.classList.remove('tab-active');
@@ -477,6 +573,24 @@
                 form2.classList.remove('hidden');
                 form1.classList.add('hidden');
             }
+        }
+
+        function removePerson(icon) {
+            icon.closest('.person-chip').remove();
+        }
+
+        function addPerson() {
+            const list = document.getElementById('person-list');
+            if (list.querySelector('[data-added-person]')) return;
+            const chip = document.createElement('span');
+            chip.className = 'person-chip';
+            chip.dataset.addedPerson = 'true';
+            chip.innerHTML = '王安全员(WX001386) <i class="fa fa-times cursor-pointer text-xs" onclick="removePerson(this)"></i>';
+            list.insertBefore(chip, document.getElementById('add-person-button'));
+        }
+
+        function deleteMark(button) {
+            button.closest('.mark-list-item').remove();
         }
 
         // 单据类型切换更新表单文字
@@ -499,6 +613,7 @@
             document.getElementById('label-rule').innerHTML = isWz ? "违章条款/依据" : "隐患依据";
             document.getElementById('label-person').innerHTML = isWz ? "<span class='text-dangerRed'>*</span>违章人员" : "<span class='text-dangerRed'>*</span>隐患整改人";
             document.getElementById('label-time').innerHTML = isWz ? "<span class='text-dangerRed'>*</span>发现时间" : "<span class='text-dangerRed'>*</span>隐患排查时间";
+            document.getElementById('score-wrap').classList.toggle('hidden', !isWz);
 
             // 下拉分组切换
             document.getElementById('opt-wz').classList.toggle('hidden', !isWz);
@@ -549,7 +664,7 @@
             html += '<div style="margin-bottom:16px;"><div style="font-size:13px;color:#7887a0;margin-bottom:4px;">' + prefix + '条款/依据</div><div style="font-size:15px;color:#1f2937;">' + d.rule + '</div></div>';
             html += '<div style="margin-bottom:16px;"><div style="font-size:13px;color:#7887a0;margin-bottom:4px;">' + (isYh ? '隐患整改人' : '违章人员') + '</div><div style="font-size:15px;color:#1f2937;">' + d.person + '</div></div>';
             html += '<div style="margin-bottom:16px;"><div style="font-size:13px;color:#7887a0;margin-bottom:4px;">' + (isYh ? '隐患排查时间' : '发现时间') + '</div><div style="font-size:15px;color:#1f2937;">' + d.time + '</div></div>';
-            html += '<div style="margin-bottom:16px;"><div style="font-size:13px;color:#7887a0;margin-bottom:4px;">' + (isYh ? '隐患位置' : '作业位置') + '</div><div style="font-size:15px;color:#1f2937;display:flex;align-items:center;gap:8px;">' + d.location + '<span onclick="openGisMap(\'detail-location\', \'detail-btn-gismark\')" id="detail-btn-gismark" style="color:#10b981;font-size:13px;cursor:pointer;white-space:nowrap;">已标注&gt;</span></div></div>';
+            html += '<div style="margin-bottom:16px;"><div style="font-size:13px;color:#7887a0;margin-bottom:4px;">' + (isYh ? '隐患位置' : '作业位置') + '</div><div style="font-size:15px;color:#1f2937;display:flex;align-items:center;gap:8px;">' + d.location + '<button type="button" onclick="openGisMap(\'detail-location\', \'detail-btn-gismark\')" id="detail-btn-gismark" style="border:1px solid #2563eb;border-radius:4px;padding:3px 9px;background:#fff;color:#2563eb;font-size:13px;cursor:pointer;white-space:nowrap;">查看位置</button></div></div>';
             html += '<div style="margin-bottom:16px;"><div style="font-size:13px;color:#7887a0;margin-bottom:4px;">状态</div><div style="font-size:15px;color:' + (d.reviewStatus === '待核实' ? '#10b981' : '#f59e0b') + ';">' + d.reviewStatus + '</div></div>';
             if (d.reviewResult) {
                 html += '<div style="margin-bottom:16px;"><div style="font-size:13px;color:#7887a0;margin-bottom:4px;">复核结果</div><div style="font-size:15px;color:' + (d.reviewResult === '确认违章' ? '#ef4444' : '#6b7280') + ';">' + d.reviewResult + '</div></div>';
@@ -674,7 +789,7 @@
             // 更新按钮文字
             var btn = document.getElementById(gisContext.btnId);
             if (btn) {
-                btn.textContent = '已标注';
+                btn.textContent = '查看位置';
                 btn.style.color = '#10b981';
             }
             closeGisMap();

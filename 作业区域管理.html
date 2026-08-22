@@ -288,7 +288,7 @@
                                 </select> -->
                             </div>
                             <button id="addRootAreaButton"
-                                class="bg-primary text-white px-4 py-2 radius-sm flex items-center gap-2 text-sm transition-figma hover:bg-[#0E4BDB]">
+                                class="hidden bg-primary text-white px-4 py-2 radius-sm items-center gap-2 text-sm transition-figma hover:bg-[#0E4BDB]">
                                 <i class="fa fa-plus"></i>新增一级作业区域
                             </button>
                         </div>
@@ -829,7 +829,389 @@
             document.getElementById('addRootAreaButton').addEventListener('click', showPickerButton);
         })();
     </script>
-    <script src="navigation.js?v=20260819-2"></script>
+    <script>
+        (() => {
+            const d = document;
+            const tableBody = d.getElementById('areaTableBody');
+            const addRootButton = d.getElementById('addRootAreaButton');
+            const drawer = d.getElementById('areaDrawer');
+            const saveButton = d.getElementById('saveArea');
+            let pendingParent = null;
+
+            addRootButton.classList.add('hidden');
+
+            const cellText = (row, index) => row.children[index].textContent.trim();
+            const isEmptyCamera = cell => ['—', '--', ''].includes(cell.textContent.trim());
+            const actionHtml = level => level === '二级'
+                ? '<div class="flex gap-4"><span class="text-primary cursor-pointer hover:underline">新增作业区域</span></div>'
+                : level === '三级'
+                    ? '<div class="flex gap-4"><span class="text-primary cursor-pointer hover:underline">编辑</span><span class="text-red-500 cursor-pointer hover:underline">删除</span></div>'
+                    : '';
+            const cameraHtml = cell => isEmptyCamera(cell) ? '—' : cell.innerHTML;
+
+            function createLevelTwo(serial, name, unit) {
+                const row = d.createElement('tr');
+                row.className = 'table-row border-t border-borderLine transition-figma bg-[#FAFBFC]';
+                row.innerHTML = `<td class="px-4 py-3 text-textLight">${serial}</td><td class="px-4 py-3 pl-8 text-textMain">${name}分区</td><td class="px-4 py-3"><span class="tag-level2">二级</span></td><td class="px-4 py-3">--</td><td class="px-4 py-3 text-textLight">—</td><td class="px-4 py-3 text-textMain">${unit}</td><td class="px-4 py-3 text-textLight">—</td><td class="px-4 py-3">${actionHtml('二级')}</td>`;
+                return row;
+            }
+
+            function createLevelThree(serial, name, risk, owner, unit, cameras) {
+                const row = d.createElement('tr');
+                row.className = 'table-row border-t border-borderLine transition-figma bg-white';
+                row.innerHTML = `<td class="px-4 py-3 text-textLight">${serial}</td><td class="px-4 py-3 pl-12 text-textMain">${name}</td><td class="px-4 py-3"><span class="px-2 py-0.5 text-xs rounded-sm bg-purple-50 text-purple-600">三级</span></td><td class="px-4 py-3">${risk}</td><td class="px-4 py-3 text-textMain">${owner}</td><td class="px-4 py-3 text-textMain">${unit}</td><td class="px-4 py-3">${cameras}</td><td class="px-4 py-3">${actionHtml('三级')}</td>`;
+                return row;
+            }
+
+            [...tableBody.rows].forEach(row => {
+                const level = cellText(row, 2);
+                const serial = cellText(row, 0);
+                const name = cellText(row, 1);
+                const unit = cellText(row, 5);
+                const cameras = cameraHtml(row.children[6]);
+
+                if (level === '一级') {
+                    row.children[6].innerHTML = '—';
+                    row.children[7].innerHTML = actionHtml('一级');
+                    if (cameras !== '—') {
+                        const levelTwo = createLevelTwo(`${serial}.1`, name, unit);
+                        const levelThree = createLevelThree(`${serial}.1.1`, `${name}作业区域`, cellText(row, 3), cellText(row, 4), unit, cameras);
+                        row.insertAdjacentElement('afterend', levelTwo);
+                        levelTwo.insertAdjacentElement('afterend', levelThree);
+                        row.children[3].textContent = '--';
+                        row.children[4].textContent = '—';
+                    }
+                }
+
+                if (level === '二级') {
+                    const thirdName = name.replace(/二级区域/g, '作业区域') + '01';
+                    const levelThree = createLevelThree(`${serial}.1`, thirdName, cellText(row, 3), cellText(row, 4), unit, cameras);
+                    row.children[3].textContent = '--';
+                    row.children[4].textContent = '—';
+                    row.children[6].innerHTML = '—';
+                    row.children[7].innerHTML = actionHtml('二级');
+                    row.insertAdjacentElement('afterend', levelThree);
+                }
+            });
+
+            const legacySave = saveButton.onclick;
+            saveButton.onclick = event => {
+                if (!pendingParent) return legacySave && legacySave.call(saveButton, event);
+                const name = d.getElementById('areaName').value.trim();
+                if (!name) {
+                    d.getElementById('areaName').focus();
+                    return;
+                }
+                const parentSerial = cellText(pendingParent, 0);
+                let last = pendingParent;
+                let count = 0;
+                while (last.nextElementSibling && cellText(last.nextElementSibling, 2) === '三级') {
+                    last = last.nextElementSibling;
+                    count += 1;
+                }
+                const newRow = createLevelThree(
+                    `${parentSerial}.${count + 1}`,
+                    name,
+                    d.getElementById('areaRisk').value,
+                    d.getElementById('areaOwner').value.trim() || '—',
+                    cellText(pendingParent, 5),
+                    '—'
+                );
+                last.insertAdjacentElement('afterend', newRow);
+                setCameraSummary(newRow, []);
+                drawer.classList.add('hidden');
+                pendingParent = null;
+            };
+
+            const cameraField = d.getElementById('childCameraField');
+            if (cameraField) cameraField.remove();
+
+            const requiredLabels = [
+                d.querySelector('label[for="areaName"]') || d.getElementById('areaName').previousElementSibling,
+                d.querySelector('label[for="areaRisk"]') || d.getElementById('areaRisk').previousElementSibling,
+                d.querySelector('label[for="areaUnit"]') || d.getElementById('areaUnit').previousElementSibling
+            ].filter(Boolean);
+            requiredLabels.forEach(label => {
+                label.innerHTML = label.textContent.replace(/\s*\*\s*$/, '') + ' <span class="text-red-500">*</span>';
+            });
+
+            saveButton.addEventListener('click', event => {
+                const riskField = d.getElementById('areaRisk').parentElement;
+                const riskVisible = getComputedStyle(riskField).display !== 'none' && !riskField.classList.contains('hidden');
+                if (riskVisible && d.getElementById('areaRisk').value === '--') {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    d.getElementById('areaRisk').classList.add('border-red-500');
+                    d.getElementById('areaRisk').focus();
+                } else {
+                    d.getElementById('areaRisk').classList.remove('border-red-500');
+                }
+            }, true);
+
+            const deviceDrawer = d.createElement('div');
+            deviceDrawer.id = 'deviceDrawer';
+            deviceDrawer.className = 'fixed inset-0 bg-black/40 hidden z-[80]';
+            deviceDrawer.innerHTML = `<aside class="absolute right-0 top-0 h-full w-[460px] max-w-full bg-white shadow-xl flex flex-col">
+                <div class="h-16 px-6 border-b border-borderLine flex items-center justify-between"><div><h3 class="font-medium text-lg">关联摄像头</h3><p id="deviceDrawerSubtitle" class="text-xs text-textLight mt-1"></p></div><button id="closeDeviceDrawer"><i class="fa fa-times text-textLight"></i></button></div>
+                <div class="px-6 py-4 bg-blue-50 text-sm text-primary"><i class="fa fa-info-circle mr-2"></i>以下设备由系统根据三级区域自动关联</div>
+                <div id="deviceDrawerList" class="flex-1 overflow-y-auto p-5 space-y-3"></div>
+            </aside>`;
+            d.body.appendChild(deviceDrawer);
+
+            const rowDevices = new WeakMap();
+            const deviceIcon = type => type === '移动'
+                ? { icon: 'fa-dot-circle-o', color: 'bg-emerald-50 text-emerald-600' }
+                : type === '执法'
+                    ? { icon: 'fa-id-card-o', color: 'bg-amber-50 text-amber-600' }
+                    : { icon: 'fa-video-camera', color: 'bg-blue-50 text-primary' };
+            function setCameraSummary(row, devices) {
+                rowDevices.set(row, devices);
+                const cell = row.children[6];
+                cell.innerHTML = devices.length
+                    ? `<button class="camera-count text-primary hover:underline whitespace-nowrap" type="button"><i class="fa fa-video-camera mr-1"></i>${devices.length} 台</button>`
+                    : '<span class="text-textLight">0 台</span>';
+            }
+            function extractDevices(row) {
+                const cameraCell = row.children[6];
+                let items = [...cameraCell.querySelectorAll(':scope > div > div')];
+                if (!items.length) {
+                    items = [...cameraCell.querySelectorAll(':scope > div')]
+                        .filter(item => item.querySelector(':scope > .text-textMain'));
+                }
+                return items.map((item, index) => {
+                    const name = item.querySelector('.text-textMain')?.textContent.trim() || `摄像头${index + 1}`;
+                    const rawType = item.querySelector('.text-\\[11px\\]')?.textContent.trim() || '固定';
+                    const type = rawType.includes('执法') ? '执法' : rawType.includes('移动') ? '移动' : '固定';
+                    return { name, type, code: `${type === '固定' ? 'CAM' : type === '移动' ? 'MBQJ' : 'ZFJ'}-${String(index + 1).padStart(3, '0')}` };
+                });
+            }
+            [...tableBody.rows].filter(row => cellText(row, 2) === '三级').forEach(row => setCameraSummary(row, extractDevices(row)));
+
+            const openDeviceDrawer = row => {
+                const devices = rowDevices.get(row) || [];
+                d.getElementById('deviceDrawerSubtitle').textContent = `三级区域：${cellText(row, 1)} · 共 ${devices.length} 台`;
+                d.getElementById('deviceDrawerList').innerHTML = devices.length ? devices.map(device => {
+                    const style = deviceIcon(device.type);
+                    return `<div class="border border-borderLine rounded-lg p-4 flex items-center gap-3"><span class="w-11 h-11 rounded-lg ${style.color} flex items-center justify-center shrink-0"><i class="fa ${style.icon} text-lg"></i></span><div class="min-w-0 flex-1"><div class="font-medium text-sm truncate">${device.name}</div><div class="text-xs text-textLight mt-1">设备编号：${device.code}</div></div><span class="text-xs px-2 py-1 rounded ${style.color}">${device.type}</span></div>`;
+                }).join('') : '<div class="py-16 text-center text-textLight"><i class="fa fa-video-camera text-3xl mb-3 block"></i>暂无关联摄像头</div>';
+                deviceDrawer.classList.remove('hidden');
+            };
+            d.getElementById('closeDeviceDrawer').onclick = () => deviceDrawer.classList.add('hidden');
+            deviceDrawer.onclick = event => { if (event.target === deviceDrawer) deviceDrawer.classList.add('hidden'); };
+            tableBody.addEventListener('click', event => {
+                const countButton = event.target.closest('.camera-count');
+                if (countButton) openDeviceDrawer(countButton.closest('tr'));
+            });
+
+            const toolbar = addRootButton.parentElement;
+            const autoButton = d.createElement('button');
+            autoButton.id = 'autoAssociateButton';
+            autoButton.className = 'bg-primary text-white px-4 py-2 radius-sm flex items-center gap-2 text-sm transition-figma hover:bg-[#0E4BDB] disabled:opacity-70';
+            autoButton.innerHTML = '<i class="fa fa-link"></i><span>自动关联设备</span>';
+            toolbar.appendChild(autoButton);
+            const toast = d.createElement('div');
+            toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 z-[100] hidden bg-white border border-emerald-200 shadow-lg rounded-lg px-5 py-3 text-sm text-emerald-600';
+            toast.innerHTML = '<i class="fa fa-check-circle mr-2"></i>自动关联摄像头成功';
+            d.body.appendChild(toast);
+            autoButton.onclick = () => {
+                autoButton.disabled = true;
+                autoButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i><span>自动关联中...</span>';
+                setTimeout(() => {
+                    [...tableBody.rows].filter(row => cellText(row, 2) === '三级').forEach((row, index) => {
+                        const devices = rowDevices.get(row) || [];
+                        if (!devices.length) {
+                            setCameraSummary(row, [
+                                { name: `${cellText(row, 1)}固定摄像头`, type: '固定', code: `CAM-${String(index + 11).padStart(3, '0')}` },
+                                { name: `${cellText(row, 1)}移动布控球`, type: '移动', code: `MBQJ-${String(index + 11).padStart(3, '0')}` },
+                                { name: `${cellText(row, 1)}执法记录仪`, type: '执法', code: `ZFJ-${String(index + 11).padStart(3, '0')}` }
+                            ]);
+                        }
+                    });
+                    autoButton.disabled = false;
+                    autoButton.innerHTML = '<i class="fa fa-link"></i><span>自动关联设备</span>';
+                    toast.classList.remove('hidden');
+                    setTimeout(() => toast.classList.add('hidden'), 2200);
+                }, 1000);
+            };
+
+            const divisionModal = d.getElementById('gisModal');
+            const divisionMap = d.getElementById('gisMap');
+            const divisionTitle = divisionModal.querySelector('h3');
+            const divisionHint = divisionModal.querySelector('p');
+            const divisionState = d.getElementById('gisState');
+            const divisionSave = d.getElementById('saveGis');
+            let divisionAction = null;
+            let selectedZone = [];
+
+            divisionTitle.textContent = '作业区域划分';
+            divisionHint.textContent = '请选择楼栋、楼层及对应房间或片区';
+            divisionMap.className = 'h-[500px] rounded-md border border-borderLine bg-slate-50 overflow-hidden';
+            divisionMap.innerHTML = `
+                <div class="h-full flex flex-col">
+                    <div class="px-5 py-4 bg-white border-b border-borderLine flex items-center gap-4">
+                        <label class="text-sm text-textSecondary">楼栋</label>
+                        <select id="buildingSelect" class="border border-borderLine rounded px-3 py-2 text-sm min-w-[180px]"><option>生产综合楼</option><option>选矿主厂房</option><option>运输转运楼</option></select>
+                        <label class="text-sm text-textSecondary ml-4">楼层</label>
+                        <select id="floorSelect" class="border border-borderLine rounded px-3 py-2 text-sm min-w-[140px]"><option>一层</option><option>二层</option><option>三层</option></select>
+                        <span class="ml-auto text-xs text-textLight"><i class="fa fa-info-circle mr-1"></i>支持多选，再次单击可取消</span>
+                    </div>
+                    <div class="flex-1 p-6">
+                        <div class="h-full border-2 border-slate-300 bg-white rounded-lg p-4 grid grid-cols-4 grid-rows-3 gap-3 relative">
+                            <button data-zone="配电室" class="zone-cell col-span-1 row-span-1 border-2 border-slate-300 rounded bg-slate-50 hover:border-primary hover:bg-blue-50 text-sm">配电室</button>
+                            <button data-zone="主控室" class="zone-cell col-span-2 row-span-1 border-2 border-slate-300 rounded bg-slate-50 hover:border-primary hover:bg-blue-50 text-sm">主控室</button>
+                            <button data-zone="设备间" class="zone-cell col-span-1 row-span-1 border-2 border-slate-300 rounded bg-slate-50 hover:border-primary hover:bg-blue-50 text-sm">设备间</button>
+                            <button data-zone="东侧生产区" class="zone-cell col-span-2 row-span-2 border-2 border-slate-300 rounded bg-slate-50 hover:border-primary hover:bg-blue-50 text-sm">东侧生产区</button>
+                            <div class="col-span-1 row-span-2 border-2 border-dashed border-slate-300 rounded flex items-center justify-center text-textLight text-sm"><i class="fa fa-arrows-v mr-2"></i>楼梯/通道</div>
+                            <button data-zone="西侧作业区" class="zone-cell col-span-1 row-span-2 border-2 border-slate-300 rounded bg-slate-50 hover:border-primary hover:bg-blue-50 text-sm">西侧作业区</button>
+                            <div class="absolute left-1/2 top-[34%] bottom-3 w-8 -translate-x-1/2 bg-slate-100 border-x border-slate-300 flex items-center justify-center"><span class="text-[11px] text-textLight [writing-mode:vertical-rl]">中央走廊</span></div>
+                        </div>
+                    </div>
+                </div>`;
+
+            const resetZones = () => {
+                divisionMap.querySelectorAll('.zone-cell').forEach(item => item.className = item.className.replace(' border-primary bg-blue-50 text-primary', ''));
+            };
+            divisionMap.onclick = event => {
+                const zone = event.target.closest('.zone-cell');
+                if (!zone) return;
+                const zoneName = zone.dataset.zone;
+                if (selectedZone.includes(zoneName)) {
+                    selectedZone = selectedZone.filter(item => item !== zoneName);
+                    zone.classList.remove('border-primary', 'bg-blue-50', 'text-primary');
+                } else {
+                    selectedZone.push(zoneName);
+                    zone.classList.add('border-primary', 'bg-blue-50', 'text-primary');
+                }
+                divisionState.textContent = selectedZone.length
+                    ? `已选择：${d.getElementById('buildingSelect').value} / ${d.getElementById('floorSelect').value} / ${selectedZone.join('、')}`
+                    : '尚未选择房间或片区';
+                divisionSave.disabled = selectedZone.length === 0;
+                divisionSave.classList.toggle('opacity-50', selectedZone.length === 0);
+                divisionSave.classList.toggle('cursor-not-allowed', selectedZone.length === 0);
+            };
+            const closeDivision = () => {
+                divisionModal.classList.add('hidden');
+                divisionModal.classList.remove('flex');
+            };
+            ['closeGis', 'cancelGis'].forEach(id => d.getElementById(id).onclick = closeDivision);
+            divisionSave.onclick = () => {
+                if (!selectedZone.length || !divisionAction) return;
+                const building = d.getElementById('buildingSelect').value;
+                const floor = d.getElementById('floorSelect').value;
+                const divisionValue = `${building} / ${floor} / ${selectedZone.join('、')}`;
+                if (divisionAction.id === 'openAreaDivision') {
+                    d.getElementById('areaDivisionSelect').value = divisionValue;
+                    d.getElementById('areaDivisionText').textContent = divisionValue;
+                    divisionAction.classList.add('border-primary', 'text-primary', 'bg-blue-50');
+                } else {
+                    divisionAction.textContent = '已划分';
+                    divisionAction.title = divisionValue;
+                    divisionAction.classList.add('text-green-600');
+                }
+                closeDivision();
+            };
+
+            tableBody.addEventListener('click', event => {
+                const action = event.target.closest('span.cursor-pointer');
+                if (!action) return;
+                const actionName = action.textContent.trim();
+                const row = action.closest('tr');
+
+                if (actionName === '区域划分' || actionName === '已划分' || actionName.startsWith('已划分：')) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    divisionAction = action;
+                    selectedZone = [];
+                    resetZones();
+                    d.getElementById('gisSubtitle').textContent = `当前三级区域：${cellText(row, 1)}`;
+                    divisionState.textContent = '尚未选择房间或片区';
+                    divisionSave.textContent = '确认划分';
+                    divisionSave.disabled = true;
+                    divisionSave.classList.add('opacity-50', 'cursor-not-allowed');
+                    divisionModal.classList.remove('hidden');
+                    divisionModal.classList.add('flex');
+                    return;
+                }
+
+                if (actionName === '新增作业区域') {
+                    pendingParent = row;
+                    action.textContent = '新增下级';
+                    action.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                    action.textContent = '新增作业区域';
+                    d.getElementById('areaDrawerTitle').textContent = '新增作业区域';
+                    d.getElementById('areaParent').value = cellText(row, 1);
+                    return;
+                }
+
+                if (actionName === '编辑') {
+                    pendingParent = null;
+                    const level = cellText(row, 2);
+                    setTimeout(() => {
+                        const cameraField = d.getElementById('childCameraField');
+                        if (cameraField) cameraField.classList.add('hidden');
+                    });
+                }
+            }, true);
+
+            const drawerFields = drawer.querySelector('.flex-1.overflow-y-auto');
+            const divisionField = d.createElement('div');
+            divisionField.id = 'areaDivisionField';
+            divisionField.className = 'hidden';
+            divisionField.innerHTML = `<label class="text-sm text-textSecondary block mb-2">区域划分</label>
+                <button id="openAreaDivision" type="button" class="w-full border border-borderLine radius-sm px-3 py-3 flex items-center gap-3 text-left hover:border-primary transition-colors">
+                    <i class="fa fa-map-o text-primary"></i>
+                    <span id="areaDivisionText" class="flex-1 text-textLight">请选择作业区域划分</span>
+                    <i class="fa fa-angle-right text-textLight"></i>
+                </button>
+                <input id="areaDivisionSelect" type="hidden" value="">`;
+            drawerFields.appendChild(divisionField);
+
+            d.getElementById('openAreaDivision').onclick = () => {
+                divisionAction = d.getElementById('openAreaDivision');
+                selectedZone = [];
+                resetZones();
+                d.getElementById('gisSubtitle').textContent = `新增三级区域：${d.getElementById('areaName').value.trim() || '待填写'}`;
+                divisionState.textContent = '尚未选择房间或片区';
+                divisionSave.textContent = '确认划分';
+                divisionSave.disabled = true;
+                divisionSave.classList.add('opacity-50', 'cursor-not-allowed');
+                divisionModal.classList.remove('hidden');
+                divisionModal.classList.add('flex');
+            };
+
+            tableBody.addEventListener('click', event => {
+                const action = event.target.closest('span.cursor-pointer');
+                if (!action) return;
+                if (action.textContent.trim() === '新增作业区域') {
+                    divisionField.classList.remove('hidden');
+                    d.getElementById('areaDivisionSelect').value = '';
+                    d.getElementById('areaDivisionText').textContent = '请选择作业区域划分';
+                    d.getElementById('openAreaDivision').classList.remove('border-primary', 'text-primary', 'bg-blue-50');
+                } else if (action.textContent.trim() === '编辑') {
+                    divisionField.classList.add('hidden');
+                }
+            });
+
+            saveButton.addEventListener('click', () => {
+                if (!divisionField.classList.contains('hidden')) {
+                    drawer.dataset.areaDivision = d.getElementById('areaDivisionSelect').value;
+                }
+            });
+
+            const normalizeActions = () => {
+                [...tableBody.rows].forEach(areaRow => {
+                    const level = cellText(areaRow, 2);
+                    if (level === '一级') areaRow.children[7].innerHTML = '';
+                    if (level === '二级') areaRow.children[7].innerHTML = actionHtml('二级');
+                    if (level === '三级') areaRow.children[7].innerHTML = actionHtml('三级');
+                });
+            };
+            normalizeActions();
+            new MutationObserver(normalizeActions).observe(tableBody, { childList: true });
+        })();
+    </script>
+    <script src="navigation.js?v=20260821"></script>
+<script src="org-panel-toggle.js?v=20260822-2"></script>
 </body>
 
 </html>

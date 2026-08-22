@@ -102,7 +102,7 @@
                     <span class="font-medium text-sm">井下运输大巷-123水平（IPC-123456）</span>
                     <div class="flex gap-2 text-sm text-primary cursor-pointer">
                         <i class="fa fa-camera"></i>固定摄像头
-                        <i class="fa fa-download"></i>下载视频
+                        <!-- <i class="fa fa-download"></i>下载视频 -->
                     </div>
                 </div>
                 <!-- 视频播放器 -->
@@ -148,22 +148,24 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">违章人员选择 <span class="text-danger">*</span></label>
-                    <div class="border border-grayBorder rounded px-3 py-2 text-sm flex justify-between items-center">
-                        <span>张安全 (手机号：15015898888)</span>
-                        <span class="text-success"><i class="fa fa-check"></i>已选择</span>
+                    <label class="block text-sm font-medium mb-2">复核结果 <span class="text-danger">*</span></label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="border border-danger text-danger rounded py-2 flex items-center justify-center gap-2 bg-danger/5">
+                            <i class="fa fa-exclamation-circle"></i>确认违章
+                        </button>
+                        <button class="border border-success text-success rounded py-2 flex items-center justify-center gap-2">
+                            <i class="fa fa-check"></i>非违章
+                        </button>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">违章等级 <span class="text-danger">*</span></label>
-                    <select class="w-full border border-grayBorder rounded px-3 py-2 text-sm outline-none focus:border-primary bg-white">
-                        <option value="A">A类违章</option>
-                        <option value="B">B类违章</option>
-                        <option value="C" selected>C类违章</option>
-                        <option value="D">D类违章</option>
-                        <option value="O">其他类违章</option>
-                    </select>
+                    <label class="block text-sm font-medium mb-2"><span class="text-danger">*</span>违章人员</label>
+                    <div id="selectedViolationPeople" class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-primary">陶炳之(WX000864)<button type="button" class="text-primary" onclick="this.parentElement.remove()">×</button></span>
+                        <span class="inline-flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-primary">魏伟(WX001258)<button type="button" class="text-primary" onclick="this.parentElement.remove()">×</button></span>
+                        <button id="addViolationPerson" type="button" class="rounded border border-dashed border-primary px-3 py-2 text-primary hover:bg-blue-50">＋ 添加人员</button>
+                    </div>
                 </div>
 
                 <div class="mb-4">
@@ -181,21 +183,35 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">违章条款/依据 <span class="text-danger">*</span></label>
-                    <textarea class="w-full border border-grayBorder rounded p-2 text-sm h-20 resize-none outline-none focus:border-primary" placeholder="请输入违章对应的制度条款或法律依据..." maxlength="500">《安全生产管理制度》第三章 第三条：违反安全管理规定，在作业过程中未按要求佩戴个人安全防护用品。</textarea>
-                    <div class="text-right text-xs text-gray-400">0/500</div>
+                    <label class="block text-sm font-medium mb-2">违章等级 <span class="text-danger">*</span></label>
+                    <select class="w-full border border-grayBorder rounded px-3 py-2 text-sm outline-none focus:border-primary bg-white">
+                        <option value="A">A类违章</option>
+                        <option value="B">B类违章</option>
+                        <option value="C" selected>C类违章</option>
+                        <option value="D">D类违章</option>
+                        <option value="O">其他类违章</option>
+                    </select>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">复核结果 <span class="text-danger">*</span></label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button class="border border-danger text-danger rounded py-2 flex items-center justify-center gap-2 bg-danger/5">
-                            <i class="fa fa-exclamation-circle"></i>确认违章
-                        </button>
-                        <button class="border border-success text-success rounded py-2 flex items-center justify-center gap-2">
-                            <i class="fa fa-check"></i>非违章
-                        </button>
-                    </div>
+                    <label class="block text-sm font-medium mb-2">违章单位 <span class="text-danger">*</span></label>
+                    <select class="w-full border border-grayBorder rounded px-3 py-2 text-sm outline-none focus:border-primary bg-white">
+                        <option selected>齐大山选矿厂</option>
+                        <option>弓长岭铁矿</option>
+                        <option>眼前山铁矿</option>
+                        <option>东鞍山分公司</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">违章记分</label>
+                    <input type="text" value="12分" readonly class="w-full border border-red-200 rounded px-3 py-2 text-sm font-semibold text-danger bg-red-50 outline-none" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">违章条款/依据 <span class="text-danger">*</span></label>
+                    <textarea class="w-full border border-grayBorder rounded p-2 text-sm h-20 resize-none outline-none focus:border-primary" placeholder="请输入违章对应的制度条款或法律依据..." maxlength="500">《安全生产管理制度》第三章 第三条：违反安全管理规定，在作业过程中未按要求佩戴个人安全防护用品。</textarea>
+                    <div class="text-right text-xs text-gray-400">0/500</div>
                 </div>
 
                 <div class="mb-4">
@@ -212,6 +228,17 @@
         </div>
     </main>
     </div>
+    <script>
+        document.getElementById('addViolationPerson').addEventListener('click', function () {
+            const list = document.getElementById('selectedViolationPeople');
+            if (list.querySelector('[data-added-person]')) return;
+            const person = document.createElement('span');
+            person.dataset.addedPerson = 'true';
+            person.className = 'inline-flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-primary';
+            person.innerHTML = '王强(WX003126)<button type="button" class="text-primary" onclick="this.parentElement.remove()">×</button>';
+            list.insertBefore(person, this);
+        });
+    </script>
     <script src="navigation.js?v=20260819-2"></script>
 </body>
 </html>
